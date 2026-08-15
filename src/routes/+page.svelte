@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+    import { launchApp } from "$lib/apps/registry";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -24,7 +25,7 @@
     "All this computer hacking is making me thirsty. I think I'll order a Tab!",
   ]
 
-  const NEXT_ROUTE = "/moss";
+  // const NEXT_ROUTE = "/moss";
   const quip = WITTY_QUIPS[Math.floor(Math.random() * WITTY_QUIPS.length)];
   let mounted = false;
 
@@ -40,7 +41,8 @@
 
 
     const timer = window.setTimeout(() => {
-      void goto(NEXT_ROUTE, { replaceState: true });
+      void launchApp("launcher");
+      // void goto(NEXT_ROUTE, { replaceState: true });
     }, 1800);
 
     return () => window.clearTimeout(timer);

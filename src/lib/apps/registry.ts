@@ -2,6 +2,7 @@ import { goto } from "$app/navigation";
 import type { Component } from "svelte";
 import WindowConsole20Filled from "virtual:icons/fluent/window-console-20-filled";
 import Keyboard from "virtual:icons/fluent/keyboard-20-filled";
+import Cursor from "virtual:icons/fluent/cursor-20-filled";
 
 export type Control = {
     icon: Component;
@@ -23,7 +24,9 @@ export type App = {
     // The screens this app has, and their respective components.
     // NOTE: Your app must have a root ("/") screen, and all other screens must be reachable from the root screen.
     screens: Record<string, AppScreen>;
-
+    // Whether or not this application should appear in the app launcher.
+    // If false, the app will not be listed in the app launcher, but can still be launched via URL.
+    showInLauncher?: boolean;
     // The launch function of this app. The return value of this function will determine what happens next probably.
     launch: () => Promise<LaunchAppResult>;
 };
@@ -92,6 +95,27 @@ const appRegistry: Record<string, App> = {
         },
         launch: () => {
             goto("/terminal");
+            return Promise.resolve({ success: true });
+        }
+    },
+    launcher: {
+        name: "Launcher",
+        description: "A launcher for apps",
+        icon: WindowConsole20Filled,
+        showInLauncher: false,
+        screens: {
+            "/": {
+                load: () => import("$lib/apps/launcher/LauncherRoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
+            }
+        },
+        launch: () => {
+            goto("/launcher");
             return Promise.resolve({ success: true });
         }
     }

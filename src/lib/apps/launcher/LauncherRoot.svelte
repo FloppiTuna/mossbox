@@ -10,6 +10,7 @@
         id?: string;
         name: string;
         description?: string;
+        showInLauncher?: boolean;
         icon?: Component;
         type: "folder" | "app" | "action";
         children?: TreeNode[];
@@ -21,6 +22,7 @@
         id: appId,
         name: app.name,
         description: app.description,
+        showInLauncher: app.showInLauncher ?? true,
         icon: app.icon,
         type: "app" as const,
         metadata: { appId },
@@ -121,59 +123,61 @@
             {/if}
 
             {#each visibleItems as child}
-                <li
-                    class:active={(child.id ?? child.name) === (selectedItem?.id ?? selectedItem?.name)}
-                    onmouseenter={() => (selectedItem = child)}
-                    onmouseleave={() => (selectedItem = null)}
-                >
-                    {#if child.type === "folder"}
-                        <button
-                            type="button"
-                            class="row-content row-button"
-                            onclick={() => goToFolder(child.name)}
-                        >
-                            <div class="list-icon">
-                                {#if child.icon}
-                                    <child.icon />
-                                {/if}
-                            </div>
-                            {child.name}
-                        </button>
-                    {:else if child.type === "app"}
-                        <button
-                            type="button"
-                            class="row-content row-button"
-                            onclick={() =>
-                                launchApp(
-                                    String(
-                                        child.metadata?.appId ??
-                                            child.id ??
-                                            child.name,
-                                    ),
-                                )}
-                        >
-                            <div class="list-icon">
-                                {#if child.icon}
-                                    <child.icon />
-                                {/if}
-                            </div>
-                            <div class="list-label">
+                {#if child.showInLauncher ?? true}
+                    <li
+                        class:active={(child.id ?? child.name) === (selectedItem?.id ?? selectedItem?.name)}
+                        onmouseenter={() => (selectedItem = child)}
+                        onmouseleave={() => (selectedItem = null)}
+                    >
+                        {#if child.type === "folder"}
+                            <button
+                                type="button"
+                                class="row-content row-button"
+                                onclick={() => goToFolder(child.name)}
+                            >
+                                <div class="list-icon">
+                                    {#if child.icon}
+                                        <child.icon />
+                                    {/if}
+                                </div>
                                 {child.name}
-                            </div>
-                        </button>
-                    {:else if child.type === "action"}
-                        <span class="row-content">
-                            <span class="list-icon">
-                                {#if child.icon}
-                                    <child.icon />
-                                {:else}
-                                    ⚡
-                                {/if}
+                            </button>
+                        {:else if child.type === "app"}
+                            <button
+                                type="button"
+                                class="row-content row-button"
+                                onclick={() =>
+                                    launchApp(
+                                        String(
+                                            child.metadata?.appId ??
+                                                child.id ??
+                                                child.name,
+                                        ),
+                                    )}
+                            >
+                                <div class="list-icon">
+                                    {#if child.icon}
+                                        <child.icon />
+                                    {/if}
+                                </div>
+                                <div class="list-label">
+                                    {child.name}
+                                </div>
+                            </button>
+                        {:else if child.type === "action"}
+                            <span class="row-content">
+                                <span class="list-icon">
+                                    {#if child.icon}
+                                        <child.icon />
+                                    {:else}
+                                        ⚡
+                                    {/if}
+                                </span>
+                                {child.name}
                             </span>
-                            {child.name}
-                        </span>
-                    {/if}
-                </li>
+                        {/if}
+                    </li>
+                {/if}
             {/each}
         </ul>
     </div>

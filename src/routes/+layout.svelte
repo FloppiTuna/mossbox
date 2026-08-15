@@ -7,7 +7,7 @@
     import GameControllerB from "virtual:icons/fluent/game-controller-button-b-20-filled";
     import GameControllerX from "virtual:icons/fluent/game-controller-button-x-20-filled";
     import GameControllerY from "virtual:icons/fluent/game-controller-button-y-20-filled";
-    import { resolveAppScreen } from "$lib/apps/registry";
+    import { launchApp, resolveAppScreen } from "$lib/apps/registry";
 
     let appId = $derived(page.params.appName);
     let screenPath = $derived(page.params.screenPath);
@@ -33,7 +33,7 @@
     function onKeyPressed(event: KeyboardEvent) {
         if (event.key === "Escape") {
             event.preventDefault();
-            void goto("/moss");
+            void launchApp("launcher"); // cant wait to add multitasking,,,
         } else {
             console.log(`Key pressed: ${event.key}`);
         }
