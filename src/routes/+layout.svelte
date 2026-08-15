@@ -110,8 +110,8 @@
         margin: 0;
         background: #000000;
         color: #f4f8f1;
-        font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial,
-            sans-serif;
+        font-family: "Avenir Next";
+        -webkit-font-smoothing: antialiased;
     }
 
     .moss {
