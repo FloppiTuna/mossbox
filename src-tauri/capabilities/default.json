@@ -1,0 +1,29 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "host-shell-pty",
+          "cmd": "/usr/bin/script",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "host-shell-zsh",
+          "cmd": "/bin/zsh",
+          "args": true,
+          "sidecar": false
+        }
+      ]
+    },
+    "shell:allow-stdin-write",
+    "shell:allow-kill"
+  ]
+}
