@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-    import { launchApp } from "$lib/apps/registry";
+  import { launchApp } from "$lib/apps/registry";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -25,7 +25,6 @@
     "All this computer hacking is making me thirsty. I think I'll order a Tab!",
   ]
 
-  // const NEXT_ROUTE = "/moss";
   const quip = WITTY_QUIPS[Math.floor(Math.random() * WITTY_QUIPS.length)];
   let mounted = false;
 
@@ -39,32 +38,40 @@
       console.error("Failed to play startup sound:", err);
     });
 
-
     const timer = window.setTimeout(() => {
       void launchApp("launcher");
-      // void goto(NEXT_ROUTE, { replaceState: true });
     }, 1800);
 
     return () => window.clearTimeout(timer);
   });
 </script>
 
-<main class="splash" aria-label="Splash screen">
-  {#if mounted}
-    <span class="title" in:fade={{ duration: 150, delay: 200 }} out:fade={{ duration: 100 }}>mossbox</span>
-    <span class="quip" in:fade={{ duration: 150, delay: 400 }} out:fade={{ duration: 100 }}>{quip}</span>
-  {/if}
+<main class="splash-screen" aria-label="Splash screen">
+  <div class="splash-content">
+    {#if mounted}
+      <span class="title" in:fade={{ duration: 150, delay: 200 }} out:fade={{ duration: 100 }}>mossbox</span>
+      <span class="quip" in:fade={{ duration: 150, delay: 600 }} out:fade={{ duration: 100 }}>{quip}</span>
+    {/if}
+  </div>
 </main>
 
 <style>
-  .splash {
-    min-height: 100dvh;
+  .splash-screen {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     display: flex;
     place-content: center;
-    gap: 0.5rem;
     text-align: center;
     letter-spacing: 0.08em;
     flex-direction: column;
+  }
+
+  .splash-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .title {

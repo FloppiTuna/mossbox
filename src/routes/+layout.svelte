@@ -45,7 +45,10 @@
 <main class="moss">
     <div class="title-bar">
         <!-- Title bar content -->
-        <div class="title">mossbox {pathname}</div>
+        <div class="title">
+            <span class="title-text">mossbox</span>
+            <span class="path-text">{pathname}</span>
+        </div>
         <!-- battery + time -->
         <div class="status">{time.toLocaleString()}</div>
     </div>
@@ -161,7 +164,26 @@
     }
 
     .title-bar .title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .title-bar .title-text {
+        display: flex;
+        flex-direction: row;
         font-weight: bold;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .title-bar .path-text {
+        font-weight: bold;
+        opacity: 0.75;
+        margin-left: 0.5rem;
     }
 
     .footer {
