@@ -189,17 +189,24 @@
 
 <style>
     .browser {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+
         display: flex;
         flex-direction: row;
-        height: 100%;
-        min-height: 0;
+        align-items: stretch;
+
         gap: 1.2rem;
+        box-sizing: border-box;
     }
 
     .browser .tree {
-        flex: 0.6;
-        background: #000000;
+        flex: 3 1 0;
         min-width: 0;
+
+        background: #000000;
         box-sizing: border-box;
     }
 
@@ -265,9 +272,10 @@
     }
 
     .browser .details {
-        flex: 0.4;
-        background: #000000;
+        flex: 2 1 0;
         min-width: 0;
+
+        background: #000000;
         box-sizing: border-box;
         padding: 0.8rem 1rem;
     }

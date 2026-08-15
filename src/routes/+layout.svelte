@@ -102,12 +102,13 @@
 <style>
     :global(html),
     :global(body) {
+        width: 100%;
         height: 100%;
+        margin: 0;
         overflow: hidden;
     }
 
     :global(body) {
-        margin: 0;
         background: #000000;
         color: #f4f8f1;
         font-family: "Avenir Next";
@@ -115,9 +116,13 @@
     }
 
     .moss {
-        height: 100dvh;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+
         display: flex;
         flex-direction: column;
+
         overflow: hidden;
     }
 
@@ -131,21 +136,28 @@
     }
 
     .content {
-        flex: 1;
+        flex: 1 1 0;
+        min-width: 0;
         min-height: 0;
+
         padding: 1rem;
+        box-sizing: border-box;
+
         background: linear-gradient(
             140deg,
             #151017 0%,
             #261a2a 55%,
             #100b12 100%
         );
+
         overflow: hidden;
     }
 
     .page-shell {
-        height: 100%;
         width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
     }
 
     .title-bar .title {
