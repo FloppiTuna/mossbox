@@ -145,6 +145,15 @@ export const appRegistry: Record<string, App> = {
                         label: "Navigate"
                     }
                 ]
+            },
+            "/:folderPath": {
+                load: () => import("$lib/apps/launcher/LauncherRoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
             }
         },
         launch: () => {
@@ -223,17 +232,37 @@ export function resolveAppScreen(
     routeScreenPath?: string
 ): ResolveAppScreenResult {
     const app = appRegistry[appId];
+
     if (!app) {
-        return { success: false, error: "App not found" };
+        return {
+            success: false,
+            error: "App not found"
+        };
     }
 
     const screenPath = normalizeScreenPath(routeScreenPath);
+
+    // the launcher handles paths differently
+    // todo: maybe this could be some kind of special case for apps with dynamic route parameters, but for now this is fine lol
+    if (appId === "launcher") {
+        const rootScreen = app.screens["/"];
+
+        return {
+            success: true,
+            app,
+            appId,
+            screenPath,
+            controls: rootScreen.controls,
+            loadScreen: rootScreen.load
+        };
+    }
+
     const loadScreen = app.screens[screenPath];
 
     if (!loadScreen) {
         return {
             success: false,
-            error: `Screen not found for app '${appId}': ${screenPath}`,
+            error: `Screen not found for app '${appId}': ${screenPath}`
         };
     }
 
@@ -243,6 +272,6 @@ export function resolveAppScreen(
         appId,
         screenPath,
         controls: loadScreen.controls,
-        loadScreen: loadScreen.load,
+        loadScreen: loadScreen.load
     };
 }
