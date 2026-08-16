@@ -52,11 +52,25 @@
         </div>
 
         <MBList
-            items={entriesLeft.map((entry) => ({
-                label: entry.name,
-                icon: entry.isDirectory ? Folder20Filled : Document20Filled,
-                onClick: () => navigateToDirectory(entry, "left"),
-            }))}
+            items={[
+                {
+                    label: "Parent Directory",
+                    icon: Folder20Filled,
+                    onClick: async () => {
+                        const parentPath = currentPathLeft.split("/").slice(0, -1).join("/");
+                        const entries = await readDir(parentPath, {
+                            baseDir: BaseDirectory.Home,
+                        });
+                        entriesLeft = entries;
+                        currentPathLeft = parentPath;
+                    },
+                },
+                ...entriesLeft.map((entry) => ({
+                    label: entry.name,
+                    icon: entry.isDirectory ? Folder20Filled : Document20Filled,
+                    onClick: () => navigateToDirectory(entry, "left"),
+                })),
+            ]}
         />
     </div>
 
