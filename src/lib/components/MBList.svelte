@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { playUISound } from "$lib/sfx";
+    import { onMount } from "svelte";
+
     let { items } = $props();
 </script>
 
@@ -10,7 +13,8 @@
                     type="button"
                     class="row-content row-button"
                     class:inactive={item.inactive}
-                    onclick={() => item.onClick()}
+                    onclick={() => {item.onClick(); playUISound("SELECT"); }}
+                    onmouseenter={() => {item.onHover?.(); playUISound("NAVIGATE"); }}
                 >
                     <div class="list-icon">
                         {#if item.icon}

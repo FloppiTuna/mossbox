@@ -11,16 +11,16 @@
 <main class="demo-root">
     <p>TESTTEST</p>
     <MDProgressBar progress={100} />
-    <MDDialogBox actions={[
+    <!-- <MDDialogBox actions={[
         { label: "OK", onClick: () => console.log("OK clicked") },
         { label: "Cancel", onClick: () => console.log("Cancel clicked") }
     ]}>
         <p>This is a dialog box. All changes will be lost. Spooky!</p>
-    </MDDialogBox>
+    </MDDialogBox> -->
 
     <MBList items={[
-        { label: "navigate", icon: Cursor20Filled, onClick: () => { playUISound("NAVIGATE"); console.log("Item 1 clicked") } },
-        { label: "select", icon: Cursor20Filled, onClick: () => { playUISound("SELECT"); console.log("Item 2 clicked") } },
-        { label: "back", icon: Cursor20Filled, inactive: true, onClick: () => { playUISound("BACK"); console.log("Item 3 clicked") } }
+        { label: "* Howdy! I'm Listey!", icon: Cursor20Filled, onClick: () => { } },
+        { label: "* Listey the List!", icon: Cursor20Filled, onClick: () => { }},
+        { label: "You are filled with LISTIFICATION.", icon: Cursor20Filled, inactive: true, onClick: () => { } }
     ]} />
 </main>

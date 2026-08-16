@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { launchApp } from "$lib/apps/registry";
+    import { playUISound } from "$lib/sfx";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -34,9 +35,7 @@
     });
 
     // play startup sound
-    new Audio("/sounds/boot-default.wav").play().catch((err) => {
-      console.error("Failed to play startup sound:", err);
-    });
+    playUISound("BOOT");
 
     const timer = window.setTimeout(() => {
       void launchApp("launcher");

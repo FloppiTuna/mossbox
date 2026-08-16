@@ -1,4 +1,7 @@
 const UI_SOUND_PACKS = {
+    BUILTIN: {
+        BOOT: "/sounds/ui/builtin/boot.wav",
+    },
     // temporary ui sound pack
     TiVo: {
         BACK: "/sounds/ui/tivo/TiVo-Back.wav",
@@ -12,6 +15,8 @@ const UI_SOUND_PACKS = {
 }
 
 const UI_SOUND_ASSOCIATIONS = {
+    BOOT: UI_SOUND_PACKS.BUILTIN.BOOT,
+    
     NAVIGATE: UI_SOUND_PACKS.TiVo.BLOOP,
     SELECT: UI_SOUND_PACKS.TiVo.SELECT,
     BACK: UI_SOUND_PACKS.TiVo.BACK,
