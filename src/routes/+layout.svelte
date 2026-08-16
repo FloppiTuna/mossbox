@@ -164,6 +164,7 @@
         );
 
         overflow: hidden;
+        overflow-y: scroll;
     }
 
     .page-shell {
