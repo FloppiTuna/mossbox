@@ -8,6 +8,7 @@
     import GameControllerX from "virtual:icons/fluent/game-controller-button-x-20-filled";
     import GameControllerY from "virtual:icons/fluent/game-controller-button-y-20-filled";
     import { launchApp, resolveAppScreen } from "$lib/apps/registry";
+    import { getBatteryInfo } from "tauri-plugin-device-info-api";
 
     let appId = $derived(page.params.appName);
     let screenPath = $derived(page.params.screenPath);
@@ -15,20 +16,29 @@
     let resolvedScreen = $derived(resolveAppScreen(appId || "", screenPath)); //what
 
     let { children } = $props();
-    let batteryLevel = $state(100);
     let pathname = $derived(page.url.pathname);
 
     let time = $state(new Date());
+    let batteryLevel = $state(100); // Placeholder for battery level, can be updated with actual logic
 
     // keep track of time
     const updateTime = () => {
         time = new Date();
     };
 
+    const updateBattery = () => {
+        getBatteryInfo().then((info) => {
+            console.log("Battery info:", info);
+            batteryLevel = info.level || -1;
+        })
+    }
+
     // Update the time every minute
     setInterval(updateTime, 1000);
+    setInterval(updateBattery, 60000);
     // Update the time immediately on mount
     updateTime();
+    updateBattery();
 
     function onKeyPressed(event: KeyboardEvent) {
         if (event.key === "Escape") {
@@ -50,7 +60,7 @@
             <span class="path-text">{pathname}</span>
         </div>
         <!-- battery + time -->
-        <div class="status">{time.toLocaleString()}</div>
+        <div class="status">{time.toLocaleString()} {batteryLevel == -1 ? "" : `- ${batteryLevel}%`}</div>
     </div>
     <div class="content">
         {#key pathname}

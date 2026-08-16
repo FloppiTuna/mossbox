@@ -1,87 +1,115 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
-    import { getAppRegistry, launchApp } from "$lib/apps/registry";
     import type { Component } from "svelte";
     import MdiStore24Hour from "virtual:icons/mdi/store-24-hour";
+    import {
+        appRegistry,
+        folderRegistry,
+        launchApp,
+        type App,
+        type Folder,
+        type RegistryEntry,
+    } from "$lib/apps/registry";
 
-    // ts kinda dumb oh well
-    type TreeNode = {
-        id?: string;
-        name: string;
-        description?: string;
-        showInLauncher?: boolean;
-        icon?: Component;
-        type: "folder" | "app" | "action";
-        children?: TreeNode[];
-
-        metadata?: Record<string, unknown>;
-    };
-
-    const appEntries = Object.entries(getAppRegistry()).map(([appId, app]) => ({
-        id: appId,
-        name: app.name,
-        description: app.description,
-        showInLauncher: app.showInLauncher ?? true,
-        icon: app.icon,
-        type: "app" as const,
-        metadata: { appId },
-    }));
-
-    const appTree: TreeNode = {
-        name: "root",
-        type: "folder",
-        children: [
-            {
-                name: "test-folder",
-                type: "folder",
-                description: "A test folder",
-                children: [
-                    {
-                        name: "nested-folder",
-                        type: "folder",
-                        description: "A nested folder",
-                        children: [],
-                    },
-                ],
-            },
-            ...appEntries,
-        ],
-    };
+    type ResolvedItem =
+        | {
+              type: "app";
+              app: App;
+          }
+        | {
+              type: "folder";
+              folder: Folder;
+          };
 
     const getPathSegments = () =>
         $page.url.pathname.split("/").filter(Boolean).slice(1);
 
-    const findFolder = (root: TreeNode, segments: string[]): TreeNode => {
+    const resolveEntry = (entry: RegistryEntry): ResolvedItem | undefined => {
+        if (entry.type === "app") {
+            const app = appRegistry[entry.id];
+
+            if (!app) {
+                return undefined;
+            }
+
+            return {
+                type: "app",
+                app,
+            };
+        }
+
+        const folder = folderRegistry[entry.id];
+
+        if (!folder) {
+            return undefined;
+        }
+
+        return {
+            type: "folder",
+            folder,
+        };
+    };
+
+    const findFolder = (
+        root: Folder,
+        segments: string[],
+    ): Folder | undefined => {
         let current = root;
 
         for (const segment of segments) {
-            const next = current.children?.find(
-                (child) => child.type === "folder" && child.name === segment,
+            const nextEntry = current.children.find(
+                (entry) => entry.type === "folder" && entry.id === segment,
             );
 
-            if (!next) {
-                return root;
+            if (!nextEntry || nextEntry.type !== "folder") {
+                return undefined;
             }
 
-            current = next;
+            const nextFolder = folderRegistry[nextEntry.id];
+
+            if (!nextFolder) {
+                return undefined;
+            }
+
+            current = nextFolder;
         }
 
         return current;
     };
 
     let pathSegments = $derived(getPathSegments());
-    let currentFolder = $derived(findFolder(appTree, pathSegments));
-    let visibleItems = $derived(currentFolder.children ?? []);
-    let selectedItem = $state<TreeNode | null>(null);
 
-    const folderPathFor = (folderName: string) => {
-        const nextSegments = [...pathSegments, folderName];
-        return `/moss/${nextSegments.join("/")}`;
+    let currentFolder = $derived(
+        findFolder(folderRegistry.root, pathSegments) ?? folderRegistry.root,
+    );
+
+    let visibleItems = $derived(
+        currentFolder.children
+            .map(resolveEntry)
+            .filter((item): item is ResolvedItem => {
+                if (!item) {
+                    return false;
+                }
+
+                if (item.type === "app") {
+                    return item.app.showInLauncher !== false;
+                }
+
+                return true;
+            }),
+    );
+
+    let selectedItem = $state<ResolvedItem | null>(null);
+
+    const folderPathFor = (folder: Folder) => {
+        const nextSegments = [...pathSegments, folder.id];
+
+        return `/launcher/${nextSegments.join("/")}`;
     };
 
-    const goToFolder = (folderName: string) => {
-        void goto(folderPathFor(folderName));
+    const goToFolder = (folder: Folder) => {
+        void goto(folderPathFor(folder));
     };
 
     const goToParent = () => {
@@ -90,16 +118,26 @@
         }
 
         const parentSegments = pathSegments.slice(0, -1);
+
         const parentPath =
             parentSegments.length > 0
-                ? `/moss/${parentSegments.join("/")}`
-                : "/moss";
+                ? `/launcher/${parentSegments.join("/")}`
+                : "/launcher";
+
         void goto(parentPath);
     };
+
+    const getItemName = (item: ResolvedItem) =>
+        item.type === "app" ? item.app.name : item.folder.name;
+
+    const getItemDescription = (item: ResolvedItem) =>
+        item.type === "app" ? item.app.description : item.folder.description;
+
+    const getItemIcon = (item: ResolvedItem) =>
+        item.type === "app" ? item.app.icon : item.folder.icon;
 </script>
 
 <main class="browser">
-    <!-- browser tree -->
     <div class="tree">
         <ul>
             {#if pathSegments.length > 0}
@@ -116,78 +154,68 @@
 
             {#if visibleItems.length === 0}
                 <li class="empty-folder">
-                    <span class="row-content inactive"
-                        >This folder is empty.</span
-                    >
+                    <span class="row-content inactive">
+                        This folder is empty.
+                    </span>
                 </li>
             {/if}
 
-            {#each visibleItems as child}
-                {#if child.showInLauncher ?? true}
-                    <li
-                        class:active={(child.id ?? child.name) === (selectedItem?.id ?? selectedItem?.name)}
-                        onmouseenter={() => (selectedItem = child)}
-                        onmouseleave={() => (selectedItem = null)}
-                    >
-                        {#if child.type === "folder"}
-                            <button
-                                type="button"
-                                class="row-content row-button"
-                                onclick={() => goToFolder(child.name)}
-                            >
-                                <div class="list-icon">
-                                    {#if child.icon}
-                                        <child.icon />
-                                    {/if}
-                                </div>
-                                {child.name}
-                            </button>
-                        {:else if child.type === "app"}
-                            <button
-                                type="button"
-                                class="row-content row-button"
-                                onclick={() =>
-                                    launchApp(
-                                        String(
-                                            child.metadata?.appId ??
-                                                child.id ??
-                                                child.name,
-                                        ),
-                                    )}
-                            >
-                                <div class="list-icon">
-                                    {#if child.icon}
-                                        <child.icon />
-                                    {/if}
-                                </div>
-                                <div class="list-label">
-                                    {child.name}
-                                </div>
-                            </button>
-                        {:else if child.type === "action"}
-                            <span class="row-content">
-                                <span class="list-icon">
-                                    {#if child.icon}
-                                        <child.icon />
-                                    {:else}
-                                        ⚡
-                                    {/if}
-                                </span>
-                                {child.name}
-                            </span>
-                        {/if}
-                    </li>
-                {/if}
+            {#each visibleItems as item}
+                <li
+                    class:active={item === selectedItem}
+                    onmouseenter={() => (selectedItem = item)}
+                    onmouseleave={() => (selectedItem = null)}
+                >
+                    {#if item.type === "folder"}
+                        <button
+                            type="button"
+                            class="row-content row-button"
+                            onclick={() => goToFolder(item.folder)}
+                        >
+                            <div class="list-icon">
+                                {#if item.folder.icon}
+                                    <item.folder.icon />
+                                {/if}
+                            </div>
+
+                            <div class="list-label">
+                                {item.folder.name}
+                            </div>
+                        </button>
+                    {:else}
+                        <button
+                            type="button"
+                            class="row-content row-button"
+                            onclick={() => launchApp(item.app.id)}
+                        >
+                            <div class="list-icon">
+                                {#if item.app.icon}
+                                    <item.app.icon />
+                                {/if}
+                            </div>
+
+                            <div class="list-label">
+                                {item.app.name}
+                            </div>
+                        </button>
+                    {/if}
+                </li>
             {/each}
         </ul>
     </div>
 
-    <!-- details pane -->
     <div class="details">
         <h2>Location</h2>
-        <p>/{pathSegments.join("/") || ""}</p>
-        <!-- description -->
-        <p>{selectedItem?.description}</p>
+
+        <p>
+            /{pathSegments.join("/")}
+        </p>
+
+        {#if selectedItem}
+            <p>
+                {getItemDescription(selectedItem)}
+            </p>
+        {/if}
     </div>
 </main>
 

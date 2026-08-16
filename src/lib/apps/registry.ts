@@ -1,8 +1,10 @@
 import { goto } from "$app/navigation";
 import type { Component } from "svelte";
-import WindowConsole20Filled from "virtual:icons/fluent/window-console-20-filled";
+import Terminal from "virtual:icons/fluent/window-console-20-filled";
 import Keyboard from "virtual:icons/fluent/keyboard-20-filled";
 import Cursor from "virtual:icons/fluent/cursor-20-filled";
+import Smile from "virtual:icons/fluent/emoji-smile-slight-20-regular";
+import Rocket from "virtual:icons/fluent/rocket-20-filled";
 
 export type Control = {
     icon: Component;
@@ -31,10 +33,41 @@ export type App = {
     launch: () => Promise<LaunchAppResult>;
 };
 
+export type Folder = {
+    id: string;
+    name: string;
+    description?: string;
+    icon?: Component;
+
+    // IDs of apps and folders contained by this folder.
+    children: RegistryEntry[];
+};
+
+export type RegistryEntry =
+    | {
+          type: "app";
+          id: string;
+      }
+    | {
+          type: "folder";
+          id: string;
+      };
+
+
 export type LaunchAppResult = {
     success: boolean;
     error?: string;
 };
+
+export type ResolvedRegistryEntry =
+    | {
+          type: "app";
+          app: App;
+      }
+    | {
+          type: "folder";
+          folder: Folder;
+      };
 
 export type ResolveAppScreenResult =
     | {
@@ -63,11 +96,11 @@ function normalizeScreenPath(rawPath: string | undefined): string {
     return segments.length === 0 ? "/" : `/${segments.join("/")}`;
 }
 
-const appRegistry: Record<string, App> = {
+export const appRegistry: Record<string, App> = {
     demo: {
         name: "Demo",
         description: "Demo application",
-        icon: WindowConsole20Filled,
+        icon: Smile,
         screens: {
             "/": {
                 load: () => import("$lib/apps/demo/DemoRoot.svelte")
@@ -81,7 +114,7 @@ const appRegistry: Record<string, App> = {
     terminal: {
         name: "Terminal",
         description: "A terminal emulator",
-        icon: WindowConsole20Filled,
+        icon: Terminal,
         screens: {
             "/": {
                 load: () => import("$lib/apps/terminal/TerminalRoot.svelte"),
@@ -101,7 +134,7 @@ const appRegistry: Record<string, App> = {
     launcher: {
         name: "Launcher",
         description: "A launcher for apps",
-        icon: WindowConsole20Filled,
+        icon: Rocket,
         showInLauncher: false,
         screens: {
             "/": {
@@ -121,6 +154,38 @@ const appRegistry: Record<string, App> = {
     }
 };
 
+export const folderRegistry: Record<string, Folder> = {
+    root: {
+        id: "root",
+        name: "Root",
+        description: "You've been here the whole time!",
+        children: [
+            { type: "folder", id: "accessories" },
+            { type: "folder", id: "utilities" }
+        ]
+    },
+    accessories: {
+        id: "accessories",
+        name: "Accessories",
+        icon: Smile,
+        description: "Have some fun!",
+        children: [
+            { type: "app", id: "demo" }
+        ]
+    },
+    utilities: {
+        id: "utilities",
+        name: "Utilities",
+        icon: Terminal,
+        description: "Utitities for managing this device.",
+        children: [
+            { type: "app", id: "terminal" }
+        ]
+    }
+}
+
+
+
 export function launchApp(appId: string): Promise<LaunchAppResult> {
     const app = appRegistry[appId];
     if (!app) {
@@ -129,8 +194,28 @@ export function launchApp(appId: string): Promise<LaunchAppResult> {
     return app.launch();
 }
 
-export function getAppRegistry(): Record<string, App> {
-    return appRegistry;
+export function resolveEntry(
+    entry: RegistryEntry,
+): ResolvedRegistryEntry | undefined {
+    if (entry.type === "app") {
+        const app = appRegistry[entry.id];
+
+        return app
+            ? {
+                  type: "app",
+                  app,
+              }
+            : undefined;
+    }
+
+    const folder = folderRegistry[entry.id];
+
+    return folder
+        ? {
+              type: "folder",
+              folder,
+          }
+        : undefined;
 }
 
 export function resolveAppScreen(
