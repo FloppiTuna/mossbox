@@ -18,7 +18,10 @@
                         {/if}
                     </div>
 
-                    <div class="list-label">{item.label}</div>
+                    <div>
+                        <div class="list-label">{item.label}</div>
+                        <div class="list-description">{item.description}</div>
+                    </div>
                 </button>
             </li>
         {/each}
@@ -92,5 +95,10 @@
     .list .nav .list-icon :global(svg) {
         width: 100%;
         height: 100%;
+    }
+
+    .list .nav .list-description {
+        font-size: 0.75rem;
+        opacity: 0.75;
     }
 </style>
