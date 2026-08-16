@@ -5,6 +5,8 @@ import Keyboard from "virtual:icons/fluent/keyboard-20-filled";
 import Cursor from "virtual:icons/fluent/cursor-20-filled";
 import Smile from "virtual:icons/fluent/emoji-smile-slight-20-regular";
 import Rocket from "virtual:icons/fluent/rocket-20-filled";
+import NetworkToolkit from "virtual:icons/fluent/virtual-network-toolbox-20-filled";
+import BrokenHeart from "virtual:icons/fluent/heart-broken-20-filled";
 
 export type Control = {
     icon: Component;
@@ -180,6 +182,26 @@ export const appRegistry: Record<string, App> = {
             goto("/filemanager");
             return Promise.resolve({ success: true });
         }
+    },
+    portapxe: {
+        name: "PortaPXE",
+        description: "Boot a computer over the network using iPXE. Requires an ethernet connection.",
+        icon: NetworkToolkit,
+        screens: {
+            "/": {
+                load: () => import("$lib/apps/portapxe/PortaPXERoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
+            }
+        },
+        launch: () => {
+            goto("/portapxe");
+            return Promise.resolve({ success: true });
+        }
     }
 };
 
@@ -189,8 +211,18 @@ export const folderRegistry: Record<string, Folder> = {
         name: "Root",
         description: "You've been here the whole time!",
         children: [
+            { type: "folder", id: "rescue" },
             { type: "folder", id: "accessories" },
             { type: "folder", id: "utilities" }
+        ]
+    },
+    rescue: {
+        id: "rescue",
+        name: "Rescue",
+        description: "Tools to rescue computers that are unable to boot, or are missing an operating system.",
+        icon: BrokenHeart,
+        children: [
+            { type: "app", id: "portapxe" }
         ]
     },
     accessories: {
@@ -206,7 +238,7 @@ export const folderRegistry: Record<string, Folder> = {
         id: "utilities",
         name: "Utilities",
         icon: Terminal,
-        description: "Utitities for managing this device.",
+        description: "Utilities for managing this device.",
         children: [
             { type: "app", id: "terminal" },
             { type: "app", id: "filemanager" }

@@ -45,7 +45,7 @@
         }
       ]
     },
-        {
+    {
       "identifier": "fs:allow-read-dir",
       "allow": [
         {
@@ -60,6 +60,8 @@
           "path": "/**"
         }
       ]
-    }
+    },
+    "network:default",
+    "network:allow-get-interfaces"
   ]
 }

@@ -20,6 +20,7 @@
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
     "tauri-plugin-device-info-api": "^1.0.1",
+    "tauri-plugin-network-api": "^2.0.5",
     "unplugin-icons": "^23.0.1"
   },
   "devDependencies": {
