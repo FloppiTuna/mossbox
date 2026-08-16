@@ -17,7 +17,7 @@
         items={interfaces.map((iface) => ({
             label: `${iface.name}`,
             icon: iface.v4_addrs.length > 0 || iface.v6_addrs.length > 0 ? Connected : Disconnected,
-            inactive: iface.v4_addrs.length > 0 && iface.v6_addrs.length > 0,
+            inactive: iface.v4_addrs.length > 0 || iface.v6_addrs.length > 0,
             description: iface.v4_addrs.length > 0 || iface.v6_addrs.length > 0
                 ? `This interface cannot be used because it is connected to a network: ${iface.v4_addrs.map((addr) => `${addr.ip}`).join(" | ")} | ${iface.v6_addrs.map((addr) => `${addr.ip}`).join(" | ")}`
                 //? `IPv4: ${iface.v4_addrs.join(", ")} | IPv6: ${iface.v6_addrs.join(", ")}`
