@@ -27,6 +27,39 @@
     },
     "shell:allow-stdin-write",
     "shell:allow-kill",
-    "device-info:default"
+    "device-info:default",
+    "fs:default",
+    {
+      "identifier": "fs:allow-read",
+      "allow": [
+        {
+          "path": "/**"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-write",
+      "allow": [
+        {
+          "path": "/**"
+        }
+      ]
+    },
+        {
+      "identifier": "fs:allow-read-dir",
+      "allow": [
+        {
+          "path": "/**"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-mkdir",
+      "allow": [
+        {
+          "path": "/**"
+        }
+      ]
+    }
   ]
 }

@@ -45,13 +45,13 @@ export type Folder = {
 
 export type RegistryEntry =
     | {
-          type: "app";
-          id: string;
-      }
+        type: "app";
+        id: string;
+    }
     | {
-          type: "folder";
-          id: string;
-      };
+        type: "folder";
+        id: string;
+    };
 
 
 export type LaunchAppResult = {
@@ -61,13 +61,13 @@ export type LaunchAppResult = {
 
 export type ResolvedRegistryEntry =
     | {
-          type: "app";
-          app: App;
-      }
+        type: "app";
+        app: App;
+    }
     | {
-          type: "folder";
-          folder: Folder;
-      };
+        type: "folder";
+        folder: Folder;
+    };
 
 export type ResolveAppScreenResult =
     | {
@@ -160,6 +160,26 @@ export const appRegistry: Record<string, App> = {
             goto("/launcher");
             return Promise.resolve({ success: true });
         }
+    },
+    filemanager: {
+        name: "File Manager",
+        description: "A file manager for browsing files",
+        icon: Cursor,
+        screens: {
+            "/": {
+                load: () => import("$lib/apps/filemanager/FileManagerRoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
+            }
+        },
+        launch: () => {
+            goto("/filemanager");
+            return Promise.resolve({ success: true });
+        }
     }
 };
 
@@ -188,7 +208,8 @@ export const folderRegistry: Record<string, Folder> = {
         icon: Terminal,
         description: "Utitities for managing this device.",
         children: [
-            { type: "app", id: "terminal" }
+            { type: "app", id: "terminal" },
+            { type: "app", id: "filemanager" }
         ]
     }
 }
@@ -211,9 +232,10 @@ export function resolveEntry(
 
         return app
             ? {
-                  type: "app",
-                  app,
-              }
+                type: "app",
+                app,
+                id: entry.id
+            }
             : undefined;
     }
 
@@ -221,9 +243,10 @@ export function resolveEntry(
 
     return folder
         ? {
-              type: "folder",
-              folder,
-          }
+            type: "folder",
+            folder,
+            id: entry.id
+        }
         : undefined;
 }
 

@@ -15,10 +15,12 @@
     type ResolvedItem =
         | {
               type: "app";
+              id: string;
               app: App;
           }
         | {
               type: "folder";
+              id: string;
               folder: Folder;
           };
 
@@ -35,6 +37,7 @@
 
             return {
                 type: "app",
+                id: entry.id,
                 app,
             };
         }
@@ -47,6 +50,7 @@
 
         return {
             type: "folder",
+            id: entry.id,
             folder,
         };
     };
@@ -186,7 +190,7 @@
                         <button
                             type="button"
                             class="row-content row-button"
-                            onclick={() => launchApp(item.app.id)}
+                            onclick={() => launchApp(item.id)}
                         >
                             <div class="list-icon">
                                 {#if item.app.icon}
