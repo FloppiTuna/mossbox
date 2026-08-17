@@ -7,6 +7,7 @@ import Smile from "virtual:icons/fluent/emoji-smile-slight-20-regular";
 import Rocket from "virtual:icons/fluent/rocket-20-filled";
 import NetworkToolkit from "virtual:icons/fluent/virtual-network-toolbox-20-filled";
 import BrokenHeart from "virtual:icons/fluent/heart-broken-20-filled";
+import BoxToolbox20Filled from "virtual:icons/fluent/box-toolbox-20-filled";
 
 export type Control = {
     icon: Component;
@@ -183,6 +184,28 @@ export const appRegistry: Record<string, App> = {
             return Promise.resolve({ success: true });
         }
     },
+
+    flasher: {
+        name: "Flasher",
+        description: "Create a bootable USB drive from an image, or create images.",
+        icon: BoxToolbox20Filled,
+        screens: {
+            "/": {
+                load: () => import("$lib/apps/flasher/FlasherRoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
+            }
+        },
+        launch: () => {
+            goto("/flasher");
+            return Promise.resolve({ success: true });
+        }
+    },
+
     portapxe: {
         name: "PortaPXE",
         description: "Boot a computer over the network using iPXE. Requires an ethernet connection.",
@@ -222,6 +245,7 @@ export const folderRegistry: Record<string, Folder> = {
         description: "Tools to rescue computers that are unable to boot, or are missing an operating system.",
         icon: BrokenHeart,
         children: [
+            { type: "app", id: "flasher" },
             { type: "app", id: "portapxe" }
         ]
     },

@@ -26,10 +26,9 @@
         display: flex;
     }
 
-    button {
+    .button button {
         display: flex;
         align-items: center;
-        justify-content: center;
 
         padding: 0.6rem 1.0rem;
 

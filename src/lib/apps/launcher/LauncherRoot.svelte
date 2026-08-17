@@ -265,67 +265,7 @@
         box-sizing: border-box;
     }
 
-    .browser .tree ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .browser .tree li {
-        padding: 0;
-        border-bottom: 1px solid #2a2a2a;
-        height: 42px;
-    }
-
-    .browser .tree li:hover {
-        background: #2f2238;
-    }
-
-    .browser .tree .row-content {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 1rem;
-        line-height: 1.25;
-    }
-
-    .browser .tree .row-content.inactive {
-        opacity: 0.5;
-    }
-
-    .browser .tree .row-button {
-        text-align: left;
-        background: transparent;
-        color: inherit;
-        border: 0;
-        margin: 0;
-        cursor: pointer;
-        font: inherit;
-        line-height: inherit;
-        appearance: none;
-    }
-
-    .browser .tree li.active {
-        background: #49315a;
-    }
-
-    .browser .tree .list-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-right: 0.6rem;
-        flex: 0 0 auto;
-    }
-
-    .browser .tree .list-icon :global(svg) {
-        width: 100%;
-        height: 100%;
-    }
-
+   
     .browser .details {
         flex: 2 1 0;
         min-width: 0;
@@ -334,12 +274,6 @@
         box-sizing: border-box;
         padding: 0.8rem 1rem;
     }
-
-    .browser .details h2 {
-        margin: 0 0 0.5rem;
-        font-size: 0.95rem;
-    }
-
     .browser .details p {
         margin: 0;
         color: #bfaacb;

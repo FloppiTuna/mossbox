@@ -33,6 +33,15 @@
 </main>
 
 <style>
+    .list {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+        background: #000000;
+    }
+
     .list .nav {
         min-width: 0;
 

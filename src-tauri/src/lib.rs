@@ -1,3 +1,5 @@
+mod commands;
+
 use portable_pty::{native_pty_system, CommandBuilder, PtySize};
 use serde::Serialize;
 use std::{
@@ -7,6 +9,7 @@ use std::{
 };
 use tauri::Emitter;
 use uuid::Uuid;
+
 
 struct TerminalSession {
     master: Mutex<Box<dyn portable_pty::MasterPty + Send>>,
@@ -208,7 +211,8 @@ pub fn run() {
             start_terminal_session,
             write_terminal_input,
             resize_terminal_session,
-            stop_terminal_session
+            stop_terminal_session,
+            commands::storage::get_disks
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
