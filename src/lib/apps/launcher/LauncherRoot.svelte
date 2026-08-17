@@ -3,6 +3,8 @@
     import { page } from "$app/stores";
     import type { Component } from "svelte";
     import MdiStore24Hour from "virtual:icons/mdi/store-24-hour";
+    import ArrowLeft20Filled from "virtual:icons/fluent/arrow-left-20-filled";
+
     import {
         appRegistry,
         folderRegistry,
@@ -11,6 +13,7 @@
         type Folder,
         type RegistryEntry,
     } from "$lib/apps/registry";
+    import MBList from "$lib/components/MBList.svelte";
 
     type ResolvedItem =
         | {
@@ -143,7 +146,7 @@
 
 <main class="browser">
     <div class="tree">
-        <ul>
+        <!-- <ul>
             {#if pathSegments.length > 0}
                 <li class="folder-nav">
                     <button
@@ -205,16 +208,32 @@
                     {/if}
                 </li>
             {/each}
-        </ul>
+        </ul> -->
+        <MBList
+            items={[
+                ...(pathSegments.length > 0
+                    ? [
+                          {
+                              label: "Back...",
+                              icon: ArrowLeft20Filled,
+                              onClick: goToParent,
+                          },
+                      ]
+                    : []),
+                ...visibleItems.map((item) => ({
+                    label: getItemName(item),
+                    description: getItemDescription(item),
+                    icon: getItemIcon(item),
+                    onClick:
+                        item.type === "folder"
+                            ? () => goToFolder(item.folder)
+                            : () => launchApp(item.id),
+                })),
+            ]}
+        />
     </div>
 
     <div class="details">
-        <h2>Location</h2>
-
-        <p>
-            /{pathSegments.join("/")}
-        </p>
-
         {#if selectedItem}
             <p>
                 {getItemDescription(selectedItem)}

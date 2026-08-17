@@ -7,6 +7,7 @@
     import Cursor20Filled from "virtual:icons/fluent/cursor-20-filled";
 
     import { playUISound } from "$lib/sfx";
+    import { openDialog } from "$lib/dialog";
     
     let demoProgress = $state(50);
 </script>
@@ -27,4 +28,6 @@
         { label: "* Listey the List!", icon: Cursor20Filled, onClick: () => { }},
         { label: "You are filled with LISTIFICATION.", icon: Cursor20Filled, inactive: true, onClick: () => { } }
     ]} />
+
+    <MBButton label="Open test dialog (message)" icon={Cursor20Filled} onClick={() => { openDialog('MESSAGE', 'Test Dialog', 'This is a test dialog.', [{ label: 'OK', action: () => console.log('OK clicked') }]); }} />
 </main>
