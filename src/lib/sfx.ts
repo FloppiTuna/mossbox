@@ -8,6 +8,8 @@ const UI_SOUND_PACKS = {
         NAVIGATE: "/sounds/ui/tivo/navigate.mp3",
         BACK: "/sounds/ui/tivo/back.mp3",
 
+        MESSAGE: "/sounds/ui/tivo/message.mp3",
+        WARNING: "/sounds/ui/tivo/warning.mp3",
         ERROR: "/sounds/ui/tivo/error.mp3",
     }
 }
@@ -19,6 +21,8 @@ const UI_SOUND_ASSOCIATIONS = {
     SELECT: UI_SOUND_PACKS.TiVo.SELECT,
     BACK: UI_SOUND_PACKS.TiVo.BACK,
 
+    MESSAGE: UI_SOUND_PACKS.TiVo.MESSAGE,
+    WARNING: UI_SOUND_PACKS.TiVo.WARNING,
     ERROR: UI_SOUND_PACKS.TiVo.ERROR,
 }
 

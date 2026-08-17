@@ -27,5 +27,4 @@
         { label: "* Listey the List!", icon: Cursor20Filled, onClick: () => { }},
         { label: "You are filled with LISTIFICATION.", icon: Cursor20Filled, inactive: true, onClick: () => { } }
     ]} />
-
 </main>
