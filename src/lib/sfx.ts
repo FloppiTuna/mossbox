@@ -4,22 +4,22 @@ const UI_SOUND_PACKS = {
     },
     // temporary ui sound pack
     TiVo: {
-        BACK: "/sounds/ui/tivo/TiVo-Back.wav",
-        BLOOP: "/sounds/ui/tivo/TiVo-Bloop.wav",
-        BONG: "/sounds/ui/tivo/TiVo-Bong.wav",
-        DING: "/sounds/ui/tivo/TiVo-Ding.wav",
-        ERROR: "/sounds/ui/tivo/TiVo-Error.wav",
-        FAILED: "/sounds/ui/tivo/TiVo-Failed.wav",
-        SELECT: "/sounds/ui/tivo/TiVo-Select.wav",
+        SELECT: "/sounds/ui/tivo/select.mp3",
+        NAVIGATE: "/sounds/ui/tivo/navigate.mp3",
+        BACK: "/sounds/ui/tivo/back.mp3",
+
+        ERROR: "/sounds/ui/tivo/error.mp3",
     }
 }
 
 const UI_SOUND_ASSOCIATIONS = {
     BOOT: UI_SOUND_PACKS.BUILTIN.BOOT,
-    
-    NAVIGATE: UI_SOUND_PACKS.TiVo.BLOOP,
+
+    NAVIGATE: UI_SOUND_PACKS.TiVo.NAVIGATE,
     SELECT: UI_SOUND_PACKS.TiVo.SELECT,
     BACK: UI_SOUND_PACKS.TiVo.BACK,
+
+    ERROR: UI_SOUND_PACKS.TiVo.ERROR,
 }
 
 export function playUISound(sound: keyof typeof UI_SOUND_ASSOCIATIONS) {
