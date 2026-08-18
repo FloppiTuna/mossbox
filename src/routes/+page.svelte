@@ -4,6 +4,7 @@
     import { playUISound } from "$lib/sfx";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
+  import { oobeCompleted, setOobeCompleted } from "$lib/user";
 
   const WITTY_QUIPS = [
     "Hello, IT. Have you tried turning it off and on again?",
@@ -38,7 +39,13 @@
     playUISound("BOOT");
 
     const timer = window.setTimeout(() => {
-      void launchApp("launcher");
+      // is this the first boot?
+      const oobeDone = oobeCompleted();
+      if (!oobeDone) {
+        void launchApp("oobe");
+      } else {
+        void launchApp("launcher");
+      }
     }, 1800);
 
     return () => window.clearTimeout(timer);

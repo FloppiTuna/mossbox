@@ -225,6 +225,27 @@ export const appRegistry: Record<string, App> = {
             goto("/portapxe");
             return Promise.resolve({ success: true });
         }
+    },
+
+    oobe: {
+        name: "Mossbox OOBE",
+        description: "Initial user configuration.",
+        icon: Keyboard,
+        screens: {
+            "/": {
+                load: () => import("$lib/apps/internal/oobe/OobeRoot.svelte"),
+                controls: [
+                    {
+                        icon: Cursor,
+                        label: "Navigate"
+                    }
+                ]
+            }
+        },
+        launch: () => {
+            goto("/oobe");
+            return Promise.resolve({ success: true });
+        }
     }
 };
 
