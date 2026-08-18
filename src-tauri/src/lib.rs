@@ -212,7 +212,8 @@ pub fn run() {
             write_terminal_input,
             resize_terminal_session,
             stop_terminal_session,
-            commands::storage::get_disks
+            commands::storage::get_disks,
+            commands::data_folder::create_data_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

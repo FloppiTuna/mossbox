@@ -8,14 +8,21 @@
 
     import { playUISound } from "$lib/sfx";
     import { openDialog } from "$lib/dialog";
-    
+    import { invoke } from "@tauri-apps/api/core";
+
     let demoProgress = $state(50);
 </script>
 
 <main class="demo-root">
     <p>Progress Bar</p>
     <MDProgressBar progress={demoProgress} />
-    <MBButton label="Randomize progress" icon={Cursor20Filled} onClick={() => { demoProgress = Math.floor(Math.random() * 101); }} />
+    <MBButton
+        label="Randomize progress"
+        icon={Cursor20Filled}
+        onClick={() => {
+            demoProgress = Math.floor(Math.random() * 101);
+        }}
+    />
     <!-- <MDDialogBox actions={[
         { label: "OK", onClick: () => console.log("OK clicked") },
         { label: "Cancel", onClick: () => console.log("Cancel clicked") }
@@ -23,11 +30,51 @@
         <p>This is a dialog box. All changes will be lost. Spooky!</p>
     </MDDialogBox> -->
 
-    <MBList items={[
-        { label: "* Howdy! I'm Listey!", icon: Cursor20Filled, onClick: () => { } },
-        { label: "* Listey the List!", icon: Cursor20Filled, onClick: () => { }},
-        { label: "You are filled with LISTIFICATION.", icon: Cursor20Filled, inactive: true, onClick: () => { } }
-    ]} />
+    <MBList
+        items={[
+            {
+                label: "* Howdy! I'm Listey!",
+                icon: Cursor20Filled,
+                onClick: () => {},
+            },
+            {
+                label: "* Listey the List!",
+                icon: Cursor20Filled,
+                onClick: () => {},
+            },
+            {
+                label: "You are filled with LISTIFICATION.",
+                icon: Cursor20Filled,
+                inactive: true,
+                onClick: () => {},
+            },
+        ]}
+    />
 
-    <MBButton label="Open test dialog (message)" icon={Cursor20Filled} onClick={() => { openDialog('MESSAGE', 'Test Dialog', 'This is a test dialog.', [{ label: 'OK', action: () => console.log('OK clicked') }]); }} />
+    <MBButton
+        label="Open test dialog (message)"
+        icon={Cursor20Filled}
+        onClick={() => {
+            openDialog("MESSAGE", "Test Dialog", "This is a test dialog.", [
+                { label: "OK", action: () => console.log("OK clicked") },
+            ]);
+        }}
+    />
+    <MBButton
+        label="make data dir"
+        icon={Cursor20Filled}
+        onClick={() => {
+            invoke("create_data_folder")
+                .then((result) => {
+                    openDialog("MESSAGE", "Data Folder Creation", result.message, [
+                        { label: "OK", action: () => console.log("OK clicked") },
+                    ]);
+                })
+                .catch((error) => {
+                    openDialog("ERROR", "Data Folder Creation Error", error.message, [
+                        { label: "OK", action: () => console.log("OK clicked") },
+                    ]);
+                });
+        }}
+    />
 </main>

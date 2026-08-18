@@ -29,4 +29,5 @@ tauri-plugin-device-info = "1.0.1"
 tauri-plugin-fs = "2"
 tauri-plugin-network = "2.0.4"
 sysinfo = "0.39.6"
+dirs = "6.0.0"
 
