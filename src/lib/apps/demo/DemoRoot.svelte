@@ -7,7 +7,7 @@
     import Cursor20Filled from "virtual:icons/fluent/cursor-20-filled";
 
     import { playUISound } from "$lib/sfx";
-    import { openDialog } from "$lib/dialog";
+    import { showDialog } from "$lib/dialog";
     import { invoke } from "@tauri-apps/api/core";
 
     let demoProgress = $state(50);
@@ -55,9 +55,14 @@
         label="Open test dialog (message)"
         icon={Cursor20Filled}
         onClick={() => {
-            openDialog("MESSAGE", "Test Dialog", "This is a test dialog.", [
-                { label: "OK", action: () => console.log("OK clicked") },
-            ]);
+            showDialog({
+                severity: "MESSAGE",
+                title: "Test Dialog",
+                message: "This is a test dialog.",
+                actions: [
+                    { label: "OK", action: () => console.log("OK clicked") },
+                ],
+            });
         }}
     />
     <MBButton
@@ -66,14 +71,24 @@
         onClick={() => {
             invoke("create_data_folder")
                 .then((result) => {
-                    openDialog("MESSAGE", "Data Folder Creation", result.message, [
-                        { label: "OK", action: () => console.log("OK clicked") },
-                    ]);
+                    showDialog({
+                        severity: "MESSAGE",
+                        title: "Data Folder Creation",
+                        message: result.message,
+                        actions: [
+                            { label: "OK", action: () => console.log("OK clicked") },
+                        ],
+                    });
                 })
                 .catch((error) => {
-                    openDialog("ERROR", "Data Folder Creation Error", error.message, [
-                        { label: "OK", action: () => console.log("OK clicked") },
-                    ]);
+                    showDialog({
+                        severity: "ERROR",
+                        title: "Data Folder Creation Error",
+                        message: error.message,
+                        actions: [
+                            { label: "OK", action: () => console.log("OK clicked") },
+                        ],
+                    });
                 });
         }}
     />

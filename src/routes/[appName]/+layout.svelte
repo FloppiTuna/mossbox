@@ -9,20 +9,36 @@
 {@render children()}
 
 {#if $currentDialog.dialogPresent}
-    <div class="dialog-overlay" in:fade={{ duration: 100 }} out:fade={{ duration: 100 }}>
-        <div class="dialog-content">
+    <div
+        class="dialog-overlay"
+        in:fade={{ duration: 100 }}
+        out:fade={{ duration: 100 }}
+    >
+        <div class="dialog">
             <h2>{$currentDialog.title}</h2>
-            <p>{$currentDialog.message}</p>
-            {#if $currentDialog.actions}
-                <div class="dialog-actions">
-                    {#each $currentDialog.actions as action}
-                        <MBButton label={action.label} onClick={() => {
-                            action.action(); // lol
-                            closeDialog(); // todo: should this be done automatically??
-                        }} />
-                    {/each}
-                </div>
-            {/if}
+
+            <div class="dialog-content">
+                {#if $currentDialog.component}
+                    {@const DialogComponent = $currentDialog.component}
+                    <DialogComponent {...$currentDialog.componentProps} />
+                {:else if $currentDialog.message}
+                    <p>{$currentDialog.message}</p>
+                {/if}
+
+                {#if $currentDialog.actions?.length}
+                    <div class="dialog-actions">
+                        {#each $currentDialog.actions as action}
+                            <MBButton
+                                label={action.label}
+                                onClick={() => {
+                                    action.action();
+                                    closeDialog();
+                                }}
+                            />
+                        {/each}
+                    </div>
+                {/if}
+            </div>
         </div>
     </div>
 {/if}
@@ -39,5 +55,26 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
+    }
+
+    .dialog {
+        background-color: rgb(33, 0, 67);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .dialog-content .dialog-actions {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    h2 {
+        margin: 0;
+        color: rgb(255, 255, 255);
     }
 </style>
