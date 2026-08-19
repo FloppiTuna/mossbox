@@ -2,67 +2,115 @@
     import MBList from "$lib/components/MBList.svelte";
     import HardDrive20Filled from "virtual:icons/fluent/hard-drive-20-filled";
     import Document20Filled from "virtual:icons/fluent/document-20-filled";
+    import Directory20Filled from "virtual:icons/fluent/folder-20-filled";
+    import Question20Filled from "virtual:icons/fluent/question-20-filled";
+
     import { invoke } from "@tauri-apps/api/core";
+    import { onMount } from "svelte";
 
     let selectedImage = $state<string | null>(null);
     let selectedTarget = $state<string | null>(null);
 
-    // temp
-    const images = [
-        {
-            name: "ubuntu-22.04-desktop-amd64.iso",
-            description: "Ubuntu 22.04 Desktop ISO",
-            size: 3.5 * 1024 * 1024 * 1024, // 3.5 GB
-        }
-    ]
+    type FileInfo = {
+        name: string;
+        path: string;
+        isDirectory: boolean;
+        size: number | null;
+    };
 
-    const targets = [
-        {
-            name: "SanDisk Ultra 32GB",
-            description: "USB Flash Drive at /dev/sdb",
-            size: 32 * 1024 * 1024 * 1024, // 32 GB
-        }
-    ]
+    type TargetInfo = {
+        name: string;
+        description: string;
+    };
 
-    const getDisks = async () => {
+    let images = $state([] as FileInfo[]);
+
+    let targets = $state([] as TargetInfo[]);
+
+    const getImages = async () => {
         try {
-            const disks = await invoke("get_disks");
-            console.log("Disks:", disks);
+            images = await invoke<FileInfo[]>("list_files_in_data_folder", {
+                subfolder: "images",
+                createIfMissing: true,
+            });
+
+            console.log("Images in data folder:", images);
         } catch (error) {
-            console.error("Error getting disks:", error);
+            console.error("Error listing files in data folder:", error);
         }
     };
 
-    getDisks();
-
+    onMount(() => {
+        getImages();
+    });
 </script>
 
 <main class="flasher-root">
     <!-- images -->
     <div class="images">
         <MBList
-            items={(images.map((image) => ({
-                label: image.name,
-                description: image.description,
-                icon: Document20Filled,
-                onClick: () => {
-                    selectedImage = image.name;
-                },
-            })))}
+            items={[
+                ...(images.length === 0
+                    ? [
+                          {
+                              label: "No images available",
+                              description:
+                                  "Add images to the 'images' folder.",
+                              icon: Question20Filled,
+                              inactive: true,
+                          },
+                      ]
+                    : []),
+                ...images.map((image) => ({
+                    label: image.name,
+                    description: image.path,
+                    icon: () => {
+                        // if (image.name.endsWith(".img")) {
+                        //     return Document20Filled;
+                        // }
+                        // return HardDrive20Filled;
+                        switch (true) {
+                            case image.isDirectory:
+                                return Directory20Filled;
+                            case image.name.endsWith(".img"):
+                                return HardDrive20Filled;
+                            case image.name.endsWith(".iso"):
+                                return Document20Filled; // todo: idfk
+                            default:
+                                return Document20Filled;
+                        }
+                    },
+                    onClick: () => {
+                        selectedImage = image.name;
+                    },
+                })),
+            ]}
         />
     </div>
 
     <!-- targets -->
     <div class="targets">
         <MBList
-            items={(targets.map((target) => ({
-                label: target.name,
-                description: target.description,
-                icon: HardDrive20Filled,
-                onClick: () => {
-                    selectedTarget = target.name;
-                },
-            })))}
+            items={[
+                ...(targets.length === 0
+                    ? [
+                          {
+                              label: "No targets available",
+                              description: "Please connect a target device.",
+                              icon: Question20Filled,
+                              inactive: true,
+                          },
+                      ]
+                    : []),
+                ...targets.map((target) => ({
+                    label: target.name,
+                    description: target.description,
+                    icon: HardDrive20Filled,
+                    onClick: () => {
+                        selectedTarget = target.name;
+                    },
+                })),
+            ]}
         />
     </div>
 

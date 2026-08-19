@@ -2469,6 +2469,7 @@ version = "0.1.0"
 dependencies = [
  "dirs",
  "portable-pty",
+ "rdd",
  "serde",
  "serde_json",
  "sysinfo 0.39.6",
@@ -3378,6 +3379,15 @@ name = "raw-window-handle"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20675572f6f24e9e76ef639bc5552774ed45f1c30e2951e1e99c59888861c539"
+
+[[package]]
+name = "rdd"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d1769ba9d4401facfd619aa649d9b6047ccd26a247a74a1f08ad6836cb20773"
+dependencies = [
+ "thiserror 2.0.20",
+]
 
 [[package]]
 name = "redox_syscall"

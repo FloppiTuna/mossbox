@@ -213,7 +213,8 @@ pub fn run() {
             resize_terminal_session,
             stop_terminal_session,
             commands::storage::get_disks,
-            commands::data_folder::create_data_folder
+            commands::data_folder::create_data_folder,
+            commands::data_folder::list_files_in_data_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
