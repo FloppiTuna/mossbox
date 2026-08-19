@@ -1,5 +1,6 @@
 <script lang="ts">
     import MBList from "$lib/components/MBList.svelte";
+    import MBButton from "$lib/components/MBButton.svelte";
     import HardDrive20Filled from "virtual:icons/fluent/hard-drive-20-filled";
     import Document20Filled from "virtual:icons/fluent/document-20-filled";
     import Directory20Filled from "virtual:icons/fluent/folder-20-filled";
@@ -7,6 +8,7 @@
 
     import { invoke } from "@tauri-apps/api/core";
     import { onMount } from "svelte";
+    import { showDialog } from "$lib/dialog";
 
     let selectedImage = $state<string | null>(null);
     let selectedTarget = $state<string | null>(null);
@@ -19,13 +21,13 @@
     };
 
     type TargetInfo = {
-        devnode: string,
-        syspath: string,
-        model: string,
-        serial: string,
-        vendor: string,
-        size: number,
-        removable: boolean,
+        devnode: string;
+        syspath: string;
+        model: string;
+        serial: string;
+        vendor: string;
+        size: number;
+        removable: boolean;
     };
 
     let images = $state([] as FileInfo[]);
@@ -69,8 +71,7 @@
                     ? [
                           {
                               label: "No images available",
-                              description:
-                                  "Add images to the 'images' folder.",
+                              description: "Add images to the 'images' folder.",
                               icon: Question20Filled,
                               inactive: true,
                           },
@@ -131,8 +132,54 @@
 
     <!-- controls -->
     <div class="controls">
-        <p>Selected Image: {selectedImage}</p>
-        <p>Selected Target: {selectedTarget}</p>
+        <p>
+            You will flash <strong>{selectedImage}</strong> to
+            <strong>{selectedTarget}</strong>.
+        </p>
+
+        <MBButton
+            label="Flash Image"
+            disabled={!selectedImage || !selectedTarget}
+            onClick={async () => {
+                if (selectedImage && selectedTarget) {
+                    try {
+                        await invoke("flash_image_to_device", {
+                            imageName: selectedImage,
+                            deviceName: selectedTarget,
+                        });
+                        showDialog({
+                            severity: "MESSAGE",
+                            title: "Flash Successful",
+                            message: `Successfully flashed ${selectedImage} to ${selectedTarget}.`,
+                            actions: [
+                                {
+                                    label: "OK",
+                                    action: () => {
+                                        // Do nothing, just close the dialog
+                                    },
+                                },
+                            ],
+                        });
+                    } catch (error) {
+                        console.error("Error flashing image:", error);
+                        showDialog({
+                            severity: "ERROR",
+                            title: "Flash Failed",
+                            message: `Failed to flash ${selectedImage} to ${selectedTarget}: ${String(error)}`,
+                            actions: [
+                                {
+                                    label: "OK",
+                                    action: () => {
+                                        // Do nothing, just close the dialog
+                                    },
+                                },
+                            ],
+                        });
+                    }
+                }
+            }}
+        >
+        </MBButton>
     </div>
 </main>
 
@@ -166,5 +213,6 @@
         min-width: 0;
         background: #000000;
         box-sizing: border-box;
+        padding: 1rem;
     }
 </style>

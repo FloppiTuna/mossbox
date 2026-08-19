@@ -23,8 +23,6 @@ fn get_device_path(device_name: &str) -> Option<String> {
     }
 }
 
-
-
 #[tauri::command]
 pub async fn flash_image_to_device(app: AppHandle, image_name: String, device_name: String) -> Result<(), String> {
     let image_path = get_image_path(&app, &image_name)
