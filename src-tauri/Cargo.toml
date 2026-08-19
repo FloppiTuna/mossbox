@@ -31,4 +31,5 @@ tauri-plugin-network = "2.0.4"
 sysinfo = "0.39.6"
 dirs = "6.0.0"
 rdd = "0.1.2"
+udev = "0.9.3"
 

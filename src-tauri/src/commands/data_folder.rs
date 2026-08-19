@@ -49,7 +49,7 @@ fn validate_subfolder(subfolder: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn get_subfolder_path(app: &AppHandle, subfolder: &str) -> Result<PathBuf, String> {
+pub fn get_subfolder_path(app: &AppHandle, subfolder: &str) -> Result<PathBuf, String> {
     validate_subfolder(subfolder)?;
 
     let data_path = get_data_path(app)?;

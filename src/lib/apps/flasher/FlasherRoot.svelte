@@ -19,8 +19,13 @@
     };
 
     type TargetInfo = {
-        name: string;
-        description: string;
+        devnode: string,
+        syspath: string,
+        model: string,
+        serial: string,
+        vendor: string,
+        size: number,
+        removable: boolean,
     };
 
     let images = $state([] as FileInfo[]);
@@ -40,8 +45,18 @@
         }
     };
 
-    onMount(() => {
-        getImages();
+    const getTargets = async () => {
+        try {
+            targets = await invoke<TargetInfo[]>("get_disks");
+            console.log("Connected targets:", targets);
+        } catch (error) {
+            console.error("Error getting connected targets:", error);
+        }
+    };
+
+    onMount(async () => {
+        await getImages();
+        await getTargets();
     });
 </script>
 
@@ -103,11 +118,11 @@
                       ]
                     : []),
                 ...targets.map((target) => ({
-                    label: target.name,
-                    description: target.description,
+                    label: target.devnode,
+                    description: `${target.model} (${target.size} bytes)`,
                     icon: HardDrive20Filled,
                     onClick: () => {
-                        selectedTarget = target.name;
+                        selectedTarget = target.devnode;
                     },
                 })),
             ]}
