@@ -1,7 +1,3 @@
-# Tauri + SvelteKit + TypeScript
+# mossbox
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
-
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+Mossbox is a shell application intended for use on cyberdeck-style devices (such as the ClockworkPi uConsole) where typical desktop environments are hard or frustrating to use.
