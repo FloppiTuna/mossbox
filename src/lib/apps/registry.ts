@@ -1,13 +1,15 @@
 import { goto } from "$app/navigation";
 import type { Component } from "svelte";
 import Terminal from "virtual:icons/fluent/window-console-20-filled";
-import Keyboard from "virtual:icons/fluent/keyboard-20-filled";
-import Cursor from "virtual:icons/fluent/cursor-20-filled";
 import Smile from "virtual:icons/fluent/emoji-smile-slight-20-regular";
-import Rocket from "virtual:icons/fluent/rocket-20-filled";
-import NetworkToolkit from "virtual:icons/fluent/virtual-network-toolbox-20-filled";
 import BrokenHeart from "virtual:icons/fluent/heart-broken-20-filled";
-import BoxToolbox20Filled from "virtual:icons/fluent/box-toolbox-20-filled";
+import { demo } from "./demo/demo";
+import { terminal } from "./terminal/terminal";
+import { launcher } from "./launcher/launcher";
+import { filemanager } from "./filemanager/filemanager";
+import { flasher } from "./flasher/flasher";
+import { portapxe } from "./portapxe/portapxe";
+import { oobe } from "./internal/oobe/oobe";
 
 export type Control = {
     icon: Component;
@@ -66,10 +68,12 @@ export type ResolvedRegistryEntry =
     | {
         type: "app";
         app: App;
+        id: string;
     }
     | {
         type: "folder";
         folder: Folder;
+        id: string;
     };
 
 export type ResolveAppScreenResult =
@@ -100,153 +104,16 @@ function normalizeScreenPath(rawPath: string | undefined): string {
 }
 
 export const appRegistry: Record<string, App> = {
-    demo: {
-        name: "Demo",
-        description: "Demo application",
-        icon: Smile,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/demo/DemoRoot.svelte")
-            }
-        },
-        launch: () => {
-            goto("/demo");
-            return Promise.resolve({ success: true });
-        }
-    },
-    terminal: {
-        name: "Terminal",
-        description: "A terminal emulator",
-        icon: Terminal,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/terminal/TerminalRoot.svelte"),
-                controls: [
-                    {
-                        icon: Keyboard,
-                        label: "Type"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/terminal");
-            return Promise.resolve({ success: true });
-        }
-    },
-    launcher: {
-        name: "Launcher",
-        description: "A launcher for apps",
-        icon: Rocket,
-        showInLauncher: false,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/launcher/LauncherRoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            },
-            "/:folderPath": {
-                load: () => import("$lib/apps/launcher/LauncherRoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/launcher");
-            return Promise.resolve({ success: true });
-        }
-    },
-    filemanager: {
-        name: "File Manager",
-        description: "A file manager for browsing files",
-        icon: Cursor,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/filemanager/FileManagerRoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/filemanager");
-            return Promise.resolve({ success: true });
-        }
-    },
+    demo: demo,
+    terminal: terminal,
+    launcher: launcher,
+    filemanager: filemanager,
 
-    flasher: {
-        name: "Flasher",
-        description: "Create a bootable USB drive from an image, or create images.",
-        icon: BoxToolbox20Filled,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/flasher/FlasherRoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/flasher");
-            return Promise.resolve({ success: true });
-        }
-    },
+    flasher: flasher,
 
-    portapxe: {
-        name: "PortaPXE",
-        description: "Boot a computer over the network using iPXE. Requires an ethernet connection.",
-        icon: NetworkToolkit,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/portapxe/PortaPXERoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/portapxe");
-            return Promise.resolve({ success: true });
-        }
-    },
+    portapxe: portapxe,
 
-    oobe: {
-        name: "Mossbox OOBE",
-        description: "Initial user configuration.",
-        icon: Keyboard,
-        screens: {
-            "/": {
-                load: () => import("$lib/apps/internal/oobe/OobeRoot.svelte"),
-                controls: [
-                    {
-                        icon: Cursor,
-                        label: "Navigate"
-                    }
-                ]
-            }
-        },
-        launch: () => {
-            goto("/oobe");
-            return Promise.resolve({ success: true });
-        }
-    }
+    oobe: oobe
 };
 
 export const folderRegistry: Record<string, Folder> = {
@@ -255,9 +122,10 @@ export const folderRegistry: Record<string, Folder> = {
         name: "Root",
         description: "You've been here the whole time!",
         children: [
+            { type: "folder", id: "all" },
             { type: "folder", id: "rescue" },
             { type: "folder", id: "accessories" },
-            { type: "folder", id: "utilities" }
+            { type: "folder", id: "utilities" },
         ]
     },
     rescue: {
@@ -287,6 +155,17 @@ export const folderRegistry: Record<string, Folder> = {
         children: [
             { type: "app", id: "terminal" },
             { type: "app", id: "filemanager" }
+        ]
+    },
+
+
+    // kitchen sink folder for apps without an entry anywhere else
+    all: {
+        id: "all",
+        name: "All Applications",
+        description: "All applications available on this device.",
+        children: [
+            ...Object.keys(appRegistry).map((appId) => ({ type: "app", id: appId }))
         ]
     }
 }
