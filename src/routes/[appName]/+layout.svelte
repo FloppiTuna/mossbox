@@ -58,9 +58,9 @@
     }
 
     .dialog {
-        background-color: rgb(33, 0, 67);
+        background-color: #25192d;
         padding: 2rem;
-        border-radius: 8px;
+        border-radius: .25rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         max-width: 400px;
         width: 100%;
