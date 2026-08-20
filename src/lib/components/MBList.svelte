@@ -113,5 +113,9 @@
     .list .nav .list-description {
         font-size: 0.75rem;
         opacity: 0.75;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>

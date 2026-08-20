@@ -80,22 +80,11 @@
                 ...images.map((image) => ({
                     label: image.name,
                     description: image.path,
-                    icon: () => {
-                        // if (image.name.endsWith(".img")) {
-                        //     return Document20Filled;
-                        // }
-                        // return HardDrive20Filled;
-                        switch (true) {
-                            case image.isDirectory:
-                                return Directory20Filled;
-                            case image.name.endsWith(".img"):
-                                return HardDrive20Filled;
-                            case image.name.endsWith(".iso"):
-                                return Document20Filled; // todo: idfk
-                            default:
-                                return Document20Filled;
-                        }
-                    },
+                    icon: image.isDirectory ? Directory20Filled : (
+                        image.name.endsWith(".img") || image.name.endsWith(".iso")
+                            ? HardDrive20Filled
+                            : Document20Filled // sigh
+                    ),
                     onClick: () => {
                         selectedImage = image.name;
                     },
@@ -178,8 +167,7 @@
                     }
                 }
             }}
-        >
-        </MBButton>
+        ></MBButton>
     </div>
 </main>
 
