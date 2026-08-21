@@ -1,6 +1,10 @@
 use serde::{de::Unexpected::Enum, Serialize};
 use sysinfo::Disks;
+use sysinfo::System;
+#[cfg(target_os = "linux")]
 use udev::Enumerator;
+
+
 
 #[derive(Debug, Serialize)]
 pub struct StorageDevice {
@@ -14,6 +18,7 @@ pub struct StorageDevice {
 }
 
 #[tauri::command]
+#[cfg(target_os = "linux")]
 pub async fn get_disks() -> Result<Vec<StorageDevice>, String> {
     let mut enumerator =
         Enumerator::new().map_err(|e| format!("Failed to create udev enumerator: {e}"))?;
@@ -43,5 +48,25 @@ pub async fn get_disks() -> Result<Vec<StorageDevice>, String> {
 
         result.push(storage_device);
     }
+    Ok(result)
+}
+
+#[tauri::command]
+#[cfg(target_os = "macos")]
+pub async fn get_disks() -> Result<Vec<StorageDevice>, String> {
+    // UNIMPLEMENTEED ON MACOS!!! this is just for now so i can do dev on my macbook LOL
+
+    let mut result: Vec<StorageDevice> = Vec::new();
+    
+    result.push(StorageDevice {
+        devnode: None,
+        syspath: String::from(""),
+        model: None,
+        serial: None,
+        vendor: None,
+        size: None,
+        removable: false,
+    });
+
     Ok(result)
 }
