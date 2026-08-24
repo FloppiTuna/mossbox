@@ -9,6 +9,7 @@
     import { playUISound } from "$lib/sfx";
     import { showDialog } from "$lib/dialog";
     import { invoke } from "@tauri-apps/api/core";
+    import { triggerPowerPrompt } from "$lib/ui";
 
     let demoProgress = $state(50);
 </script>
@@ -90,6 +91,14 @@
                         ],
                     });
                 });
+        }}
+    />
+
+    <MBButton
+        label="Trigger power menu"
+        icon={Cursor20Filled}
+        onClick={() => {
+            triggerPowerPrompt();
         }}
     />
 </main>
