@@ -2,7 +2,16 @@
     import { playUISound } from "$lib/sfx";
     import { onMount } from "svelte";
 
-    let { items } = $props();
+    type ListItem = {
+        label: string;
+        description?: string;
+        icon?: any;
+        inactive?: boolean;
+        onClick: () => void;
+        onHover?: () => void;
+    };
+
+    let { items }: { items: ListItem[] } = $props();
 </script>
 
 <main class="list">
@@ -61,6 +70,7 @@
         height: 42px;
     }
 
+    .list .nav li:focus,
     .list .nav li:hover {
         background: #2f2238;
     }
