@@ -215,7 +215,8 @@ pub fn run() {
             commands::devices::get_disks,
             commands::data_folder::create_data_folder,
             commands::data_folder::list_files_in_data_folder,
-            commands::flash::flash_image_to_device
+            commands::flash::flash_image_to_device,
+            commands::wireless::scan_wireless_networks
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -2122,6 +2122,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f56a2d0bc861f9165be4eb3442afd3c236d8a98afd426f65d92324ae1091a484"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2509,6 +2518,7 @@ dependencies = [
  "tauri-plugin-shell",
  "udev",
  "uuid",
+ "wifiscanner",
 ]
 
 [[package]]
@@ -5415,6 +5425,16 @@ dependencies = [
  "thiserror 2.0.20",
  "windows 0.61.3",
  "windows-core 0.61.2",
+]
+
+[[package]]
+name = "wifiscanner"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d74e667d34abc74f1e5b509ae3d24641f56514ba2c5a64f9d733ae2061aef856"
+dependencies = [
+ "itertools",
+ "regex",
 ]
 
 [[package]]
