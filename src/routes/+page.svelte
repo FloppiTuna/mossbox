@@ -5,6 +5,8 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { oobeCompleted, setOobeCompleted } from "$lib/user";
+    import { isDbConnected } from "$lib/db";
+    import { showDialog } from "$lib/dialog";
 
   const WITTY_QUIPS = [
     "Hello, IT. Have you tried turning it off and on again?",
@@ -33,6 +35,24 @@
   onMount(() => {
     requestAnimationFrame(() => {
       mounted = true;
+    });
+
+    isDbConnected().then((connected) => {
+      if (!connected) {
+        showDialog({
+          severity: "ERROR",
+          title: "Database Connection Error",
+          message: "Mossbox is unable to connect to the database, which is required for proper operation.",
+          actions: [
+            {
+              label: "Reload",
+              action: () => {
+                window.location.reload();
+              },
+            },
+          ],
+        });
+      }
     });
 
     // play startup sound

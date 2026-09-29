@@ -5,8 +5,6 @@ use sysinfo::System;
 #[cfg(target_os = "linux")]
 use udev::Enumerator;
 
-
-
 #[derive(Debug, Serialize)]
 pub struct StorageDevice {
     pub devnode: Option<String>,
@@ -40,11 +38,26 @@ pub async fn get_disks() -> Result<Vec<StorageDevice>, String> {
         let storage_device = StorageDevice {
             devnode: device.devnode().map(|p| p.to_string_lossy().into_owned()),
             syspath: device.syspath().to_string_lossy().into_owned(),
-            model: device.property_value("ID_MODEL").and_then(|v| v.to_str()).map(|s| s.to_string()),
-            serial: device.property_value("ID_SERIAL").and_then(|v| v.to_str()).map(|s| s.to_string()),
-            vendor: device.property_value("ID_VENDOR").and_then(|v| v.to_str()).map(|s| s.to_string()),
-            size: device.property_value("ID_SIZE").and_then(|v| v.to_str()).and_then(|s| s.parse::<u64>().ok()),
-            removable: device.property_value("ID_REMOVABLE").and_then(|v| v.to_str()) == Some("1"),
+            model: device
+                .property_value("ID_MODEL")
+                .and_then(|v| v.to_str())
+                .map(|s| s.to_string()),
+            serial: device
+                .property_value("ID_SERIAL")
+                .and_then(|v| v.to_str())
+                .map(|s| s.to_string()),
+            vendor: device
+                .property_value("ID_VENDOR")
+                .and_then(|v| v.to_str())
+                .map(|s| s.to_string()),
+            size: device
+                .property_value("ID_SIZE")
+                .and_then(|v| v.to_str())
+                .and_then(|s| s.parse::<u64>().ok()),
+            removable: device
+                .property_value("ID_REMOVABLE")
+                .and_then(|v| v.to_str())
+                == Some("1"),
         };
 
         result.push(storage_device);
@@ -58,7 +71,7 @@ pub async fn get_disks() -> Result<Vec<StorageDevice>, String> {
     // UNIMPLEMENTEED ON MACOS!!! this is just for now so i can do dev on my macbook LOL
 
     let mut result: Vec<StorageDevice> = Vec::new();
-    
+
     result.push(StorageDevice {
         devnode: None,
         syspath: String::from(""),

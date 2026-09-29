@@ -22,5 +22,4 @@
     <p>Mossbox is currently scanning the hardware attached to your uConsole to determine what needs to be installed.</p>
 
     <MBProgressBar progress={progress} />
-    <!-- <button onclick={() => changePane("NETWORK_PANE")}>Next</button> -->
 </main>

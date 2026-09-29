@@ -3,7 +3,6 @@ use tauri::AppHandle;
 
 use crate::commands::data_folder::get_subfolder_path;
 
-
 fn get_image_path(app: &AppHandle, image_name: &str) -> Option<String> {
     let data_folder = get_subfolder_path(app, "images").unwrap_or_default();
     let image_path = data_folder.join(image_name);
@@ -24,7 +23,11 @@ fn get_device_path(device_name: &str) -> Option<String> {
 }
 
 #[tauri::command]
-pub async fn flash_image_to_device(app: AppHandle, image_name: String, device_name: String) -> Result<(), String> {
+pub async fn flash_image_to_device(
+    app: AppHandle,
+    image_name: String,
+    device_name: String,
+) -> Result<(), String> {
     let image_path = get_image_path(&app, &image_name)
         .ok_or_else(|| format!("Image '{}' not found in the data folder.", image_name))?;
 

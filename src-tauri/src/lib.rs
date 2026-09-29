@@ -10,6 +10,7 @@ use std::{
 use tauri::Emitter;
 use uuid::Uuid;
 
+use tauri_plugin_sql::{Builder, Migration, MigrationKind};
 
 struct TerminalSession {
     master: Mutex<Box<dyn portable_pty::MasterPty + Send>>,
@@ -200,7 +201,22 @@ fn stop_terminal_session(
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let migrations = vec![
+        // Define your migrations here
+        Migration {
+            version: 1,
+            description: "create_users_table",
+            sql: "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, pin TEXT);",
+            kind: MigrationKind::Up,
+        },
+    ];
+
     tauri::Builder::default()
+        .plugin(
+            tauri_plugin_sql::Builder::default()
+                .add_migrations("sqlite:mossbox.db", migrations)
+                .build(),
+        )
         .plugin(tauri_plugin_network::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_device_info::init())

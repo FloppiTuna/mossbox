@@ -32,6 +32,7 @@ sysinfo = "0.39.6"
 dirs = "6.0.0"
 rdd = "0.1.2"
 wifiscanner = "0.5.1"
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 udev = "0.9.3"

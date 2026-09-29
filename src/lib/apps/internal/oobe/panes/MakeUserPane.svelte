@@ -1,9 +1,26 @@
 <script lang="ts">
+    import { closeDialog, showDialog } from "$lib/dialog";
+
     let { changePane } = $props();
 
     let username = $state("");
     let pin = $state("");
     let remember = $state(false);
+
+    async function createUser() {
+        showDialog({
+            severity: "MESSAGE",
+            title: "Creating user...",
+            message: "Please wait while Mossbox creates your user account.",
+        });
+
+        setTimeout(() => {
+            closeDialog();
+            changePane("");
+        }, 2000);
+
+    }
+    
 </script>
 
 <main class="make-user-pane">
@@ -15,5 +32,5 @@
 
     <input type="checkbox" id="remember" checked={remember} />
     <label for="remember">Log in automatically (insecure!)</label>
-    <button onclick={() => changePane("PERSONALIZATION_PANE")}>Next</button>
+    <button onclick={() => createUser()}>Next</button>
 </main>

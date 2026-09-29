@@ -62,6 +62,7 @@
       ]
     },
     "network:default",
-    "network:allow-get-interfaces"
+    "network:allow-get-interfaces",
+    "sql:default"
   ]
 }

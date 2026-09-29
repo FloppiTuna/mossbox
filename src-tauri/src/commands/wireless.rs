@@ -49,7 +49,9 @@ fn scan_networks() -> Result<Vec<MacWifi>, String> {
         .output()
         .map_err(|error| format!("Failed to list wireless networks: {error}"))?;
     if !preferred_networks.status.success() {
-        return Err(String::from_utf8_lossy(&preferred_networks.stderr).trim().to_string());
+        return Err(String::from_utf8_lossy(&preferred_networks.stderr)
+            .trim()
+            .to_string());
     }
 
     Ok(String::from_utf8_lossy(&preferred_networks.stdout)
