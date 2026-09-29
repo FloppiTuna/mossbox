@@ -16,15 +16,11 @@
         // ping a known server to check for internet connectivity
         fetch("https://www.example.com", { method: "HEAD" }).finally(() => {
             // close the dialog after the check
-            setTimeout(() => {
-                closeDialog();
-                changePane("CHECK_HARDWARE_PANE");
-            }, 2000);
+            closeDialog();
+            changePane("CHECK_HARDWARE_PANE");
         }).catch(() => {
             // if the fetch fails, assume no internet connection
-            setTimeout(() => {
-                closeDialog();
-            }, 2000);
+            closeDialog();
         });
     });
 

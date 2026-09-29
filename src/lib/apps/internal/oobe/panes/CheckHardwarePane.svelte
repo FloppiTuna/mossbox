@@ -8,11 +8,12 @@
 
     onMount(() => {
         const interval = setInterval(() => {
-            progress += 1;
+            progress += Math.floor(Math.random() * 10) + 5; // Increment progress by a random value between 5 and 15
             if (progress >= 100) {
                 clearInterval(interval);
+                changePane("MAKE_USER_PANE")
             }
-        }, 500);
+        }, 100);
     });
 </script>
 
@@ -21,5 +22,5 @@
     <p>Mossbox is currently scanning the hardware attached to your uConsole to determine what needs to be installed.</p>
 
     <MBProgressBar progress={progress} />
-    <button onclick={() => changePane("NETWORK_PANE")}>Next</button>
+    <!-- <button onclick={() => changePane("NETWORK_PANE")}>Next</button> -->
 </main>

@@ -8,7 +8,10 @@
     import CheckHardwarePane from "./panes/CheckHardwarePane.svelte";
     import PickConnectionType from "./panes/PickConnectionType.svelte";
     import WirelessConnectionPane from "./panes/WirelessConnectionPane.svelte";
-    
+    import MakeUserPane from "./panes/MakeUserPane.svelte";
+    import PersonalizationPane from "./panes/PersonalizationPane.svelte";
+    import FinishPane from "./panes/FinishPane.svelte";
+
     type Pane = {
         title: string;
         content: Component<{ changePane: (newPane: string) => void }>;
@@ -20,7 +23,7 @@
             content: WelcomePane,
         },
 
-        
+
         PICK_CONNECTION_TYPE_PANE: {
             title: "Pick Connection Type",
             content: PickConnectionType,
@@ -35,7 +38,22 @@
         CHECK_HARDWARE_PANE: {
             title: "Checking Hardware",
             content: CheckHardwarePane,
-        }
+        },
+
+        MAKE_USER_PANE: {
+            title: "Create User",
+            content: MakeUserPane,
+        },
+
+        PERSONALIZATION_PANE: {
+            title: "Personalization",
+            content: PersonalizationPane, 
+        },
+
+        FINISH_PANE: {
+            title: "Finish",
+            content: FinishPane,
+        },
     };
 
     let currentPane = $state("WELCOME_PANE");
