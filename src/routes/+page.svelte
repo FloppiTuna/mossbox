@@ -62,9 +62,9 @@
       // is this the first boot?
       const oobeDone = oobeCompleted();
       if (!oobeDone) {
-        void launchApp("oobe");
+        void launchApp("login");
       } else {
-        void launchApp("launcher");
+        void launchApp("login");
       }
     }, 1800);
 

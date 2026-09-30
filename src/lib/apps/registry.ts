@@ -10,6 +10,7 @@ import { filemanager } from "./filemanager/filemanager";
 import { flasher } from "./flasher/flasher";
 import { portapxe } from "./portapxe/portapxe";
 import { oobe } from "./internal/oobe/oobe";
+import { login } from "./internal/login/login";
 
 export type Control = {
     icon: Component;
@@ -113,7 +114,8 @@ export const appRegistry: Record<string, App> = {
 
     portapxe: portapxe,
 
-    oobe: oobe
+    oobe: oobe,
+    login: login
 };
 
 export const folderRegistry: Record<string, Folder> = {
