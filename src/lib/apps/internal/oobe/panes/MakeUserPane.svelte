@@ -37,10 +37,10 @@
     <h2>Make User</h2>
     <p>Who are you?</p>
 
-    <input type="text" placeholder="name" value={username} />
-    <input type="password" placeholder="pin" value={pin} />
+    <input type="text" placeholder="name" bind:value={username} />
+    <input type="password" placeholder="pin" bind:value={pin} />
 
-    <input type="checkbox" id="remember" checked={remember} />
+    <input type="checkbox" id="remember" bind:checked={remember} />
     <label for="remember">Log in automatically (insecure!)</label>
     <button onclick={() => submitUser()}>Next</button>
 </main>
