@@ -10,7 +10,7 @@ use std::{
 use tauri::Emitter;
 use uuid::Uuid;
 
-use tauri_plugin_sql::{Builder, Migration, MigrationKind};
+use tauri_plugin_sql::{Migration, MigrationKind};
 
 struct TerminalSession {
     master: Mutex<Box<dyn portable_pty::MasterPty + Send>>,
@@ -206,7 +206,7 @@ pub fn run() {
         Migration {
             version: 1,
             description: "create_users_table",
-            sql: "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, pin TEXT);",
+            sql: include_str!("../migrations/0000_create_users_table.sql"),
             kind: MigrationKind::Up,
         },
     ];

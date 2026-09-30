@@ -63,6 +63,7 @@
     },
     "network:default",
     "network:allow-get-interfaces",
-    "sql:default"
+    "sql:default",
+    "sql:allow-execute"
   ]
 }

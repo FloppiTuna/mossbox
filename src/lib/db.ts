@@ -1,9 +1,15 @@
 import Database from '@tauri-apps/plugin-sql';
 
-export const db = new Database('mossbox.db');
+let dbPromise: Promise<Database> | undefined;
+
+export function getDb(): Promise<Database> {
+  dbPromise ??= Database.load("sqlite:mossbox.db");
+  return dbPromise;
+}
 
 export async function isDbConnected(): Promise<boolean> {
     try {
+        const db = await getDb();
         await db.execute('SELECT 1');
         return true;
     } catch (error) {

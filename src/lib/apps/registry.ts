@@ -165,7 +165,7 @@ export const folderRegistry: Record<string, Folder> = {
         name: "All Applications",
         description: "All applications available on this device.",
         children: [
-            ...Object.keys(appRegistry).map((appId) => ({ type: "app", id: appId }))
+            ...Object.keys(appRegistry).map((appId) => ({ type: "app", id: appId })) as RegistryEntry[]
         ]
     }
 }
