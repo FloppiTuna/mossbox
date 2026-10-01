@@ -12,6 +12,7 @@ import { portapxe } from "./portapxe/portapxe";
 import { oobe } from "./internal/oobe/oobe";
 import { login } from "./internal/login/login";
 import { showDialog } from "$lib/dialog";
+import { browser } from "./browser/browser";
 
 export type Control = {
     icon: Component;
@@ -114,6 +115,7 @@ export const appRegistry: Record<string, App> = {
     flasher: flasher,
 
     portapxe: portapxe,
+    browser: browser,
 
     oobe: oobe,
     login: login

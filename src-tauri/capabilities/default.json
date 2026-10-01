@@ -66,6 +66,8 @@
     "sql:default",
     "sql:allow-execute",
     "process:default",
-    "process:allow-restart"
+    "process:allow-restart",
+    "core:webview:allow-create-webview",
+    "core:webview:allow-webview-show"
   ]
 }
