@@ -6,6 +6,7 @@
     import MBButton from "$lib/components/MBButton.svelte";
     import { showDialog } from "$lib/dialog";
     import { goto } from "$app/navigation";
+    import { getSessionContext, setSessionContext } from "$lib/session";
 
     let users = $state<{ id: number; name: string }[]>([]);
     let selectedUserId = $state<number | null>(null);
@@ -15,6 +16,24 @@
     let timesTried = $state<number>(0);
 
     onMount(async () => {
+        const session = getSessionContext();
+        if (session?.name) {
+            showDialog({
+                severity: "MESSAGE",
+                title: "Already Logged In",
+                message:
+                    `A user (${session.name}) is already logged in. Multi-user usage is not implemented. Log out to switch users.`,
+                actions: [
+                    {
+                        label: "OK",
+                        action: () => {},
+                    },
+                ],
+            });
+            goto("/launcher");
+            return;
+        }
+
         users = await getUserList();
     });
 
@@ -26,14 +45,21 @@
     async function loginUser(userId: number, pin: string) {
         const result = await authenticateUser(userId, pin);
         if (result) {
-            // this is really secure :DD
+            setSessionContext({
+                id: userId,
+                name: users.find((user) => user.id === userId)?.name || "",
+            });
             goto("/launcher");
         } else {
             timesTried += 1;
             showDialog({
                 severity: "ERROR",
                 title: "Login Failed",
-                message: "Your PIN was incorrect. Please try again." + (timesTried >= 3 ? " If you continue to have trouble, please consult the documentation for Resetting your Password." : ""),
+                message:
+                    "Your PIN was incorrect. Please try again." +
+                    (timesTried >= 3
+                        ? " If you continue to have trouble, please consult the documentation for Resetting your Password."
+                        : ""),
                 actions: [
                     {
                         label: "OK",
@@ -45,17 +71,22 @@
             });
         }
     }
-
 </script>
 
 <main class="login-root">
     <!-- todo should these be split into different paths or is that fucking STUPID -->
     {#if selectedUserId !== null}
         <div class="user-logon">
-            <h2>Log in as {users.find((user) => user.id === selectedUserId)?.name}</h2>
+            <h2>
+                Log in as {users.find((user) => user.id === selectedUserId)
+                    ?.name}
+            </h2>
             <p>Enter your PIN:</p>
             <input type="password" placeholder="PIN" bind:value={pin} />
-            <MBButton label="Log In" onClick={() => loginUser(selectedUserId!, pin)} />
+            <MBButton
+                label="Log In"
+                onClick={() => loginUser(selectedUserId!, pin)}
+            />
             <MBButton label="Back" onClick={() => (selectedUserId = null)} />
         </div>
     {:else}
