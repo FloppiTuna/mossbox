@@ -11,6 +11,7 @@ import { flasher } from "./flasher/flasher";
 import { portapxe } from "./portapxe/portapxe";
 import { oobe } from "./internal/oobe/oobe";
 import { login } from "./internal/login/login";
+import { showDialog } from "$lib/dialog";
 
 export type Control = {
     icon: Component;
@@ -179,7 +180,21 @@ export function launchApp(appId: string): Promise<LaunchAppResult> {
     if (!app) {
         return Promise.resolve({ success: false, error: "App not found" });
     }
-    return app.launch();
+    return app.launch().catch((err) => {
+        console.error(`Error launching app '${appId}':`, err);
+        showDialog({
+            severity: "ERROR",
+            title: "Error Launching App",
+            message: `The application '${app.name}' failed to launch: ${err.message}`,
+            actions: [
+                {
+                    label: "OK",
+                    action: () => { },
+                },
+            ],
+        });
+        return { success: false, error: err.message } as LaunchAppResult;
+    });
 }
 
 export function resolveEntry(

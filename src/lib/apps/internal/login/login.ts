@@ -23,19 +23,7 @@ export const login: App = {
     launch: () => {
         const session = getSessionContext();
         if (session?.name) {
-            showDialog({
-                severity: "MESSAGE",
-                title: "Already Logged In",
-                message:
-                    `A user (${session.name}) is already logged in. Multi-user usage is not implemented. Log out to switch users.`,
-                actions: [
-                    {
-                        label: "OK",
-                        action: () => { },
-                    },
-                ],
-            });
-            return Promise.resolve({ success: false });
+            return Promise.reject({ success: false, message: `A user (${session.name}) is already logged in. Multi-user usage is not implemented. Log out to switch users.` });
         } else {
             goto("/login");
             return Promise.resolve({ success: true });
