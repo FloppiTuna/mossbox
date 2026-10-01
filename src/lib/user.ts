@@ -1,16 +1,17 @@
 import { getDb } from "$lib/db";
 
-// todo: use db for this maybe? idk
-export function oobeCompleted(): boolean {
-    const oobe = localStorage.getItem('oobeCompleted');
-    if (oobe === null) {
+export async function oobeCompleted(): Promise<boolean> {
+    const db = await getDb();
+    const result = await db.select("SELECT value FROM global_settings WHERE key = 'oobe.completed'") as { value: string }[];
+    if (result.length === 0) {
         return false;
     }
-    return oobe === 'true';
+    return result[0].value === 'true';
 }
 
-export function setOobeCompleted(value: boolean): void {
-    localStorage.setItem('oobeCompleted', value.toString());
+export async function setOobeCompleted(value: boolean): Promise<void> {
+    const db = await getDb();
+    await db.execute("INSERT OR REPLACE INTO global_settings (key, value, type) VALUES ('oobe.completed', ?, 'boolean')", [value.toString()]);
 }
 
 export async function createUser(name: string, pin: string): Promise<void> {

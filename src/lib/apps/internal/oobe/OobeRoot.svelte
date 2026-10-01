@@ -59,26 +59,7 @@
     let currentPane = $state("WELCOME_PANE");
 
     onMount(() => {
-        // check if oobe even needs to run
-        if (oobeCompleted()) {
-            // if oobe is already completed, show a dialog and close the app
-            showDialog({
-                severity: "ERROR",
-                title: "Setup Already Completed",
-                message: "Mossbox setup has already been completed. Get outta here!",
-                actions: [
-                    {
-                        label: "Close",
-                        action: () => {
-                            closeDialog();
-                            launchApp("launcher");                          
-                        },
-                    },
-                ],
-            });
-        } else {
-            currentPane = "WELCOME_PANE"; // start the OOBE process
-        }
+        currentPane = "WELCOME_PANE";
     })
 
 </script>

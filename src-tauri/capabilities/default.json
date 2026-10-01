@@ -64,6 +64,8 @@
     "network:default",
     "network:allow-get-interfaces",
     "sql:default",
-    "sql:allow-execute"
+    "sql:allow-execute",
+    "process:default",
+    "process:allow-restart"
   ]
 }

@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { setOobeCompleted } from "$lib/user";
+    import { relaunch } from "@tauri-apps/plugin-process";
+
     let { changePane } = $props();
 
 </script>
@@ -7,8 +10,9 @@
     <h2>Welcome to Mossbox</h2>
     <p>Press Finish to reboot and complete the setup.</p>
 
-    <button onclick={() => {
-        //...reboot the device
+    <button onclick={async () => {
+        await setOobeCompleted(true);
+        await relaunch();
     }}>Finish</button>
 </main>
 

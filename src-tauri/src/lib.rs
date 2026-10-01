@@ -209,9 +209,16 @@ pub fn run() {
             sql: include_str!("../migrations/0000_create_users_table.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 2,
+            description: "create_global_settings_table",
+            sql: include_str!("../migrations/0001_create_global_settings.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
         .plugin(
             tauri_plugin_sql::Builder::default()
                 .add_migrations("sqlite:mossbox.db", migrations)

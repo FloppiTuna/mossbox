@@ -58,11 +58,11 @@
     // play startup sound
     playUISound("BOOT");
 
-    const timer = window.setTimeout(() => {
+    const timer = window.setTimeout(async () => {
       // is this the first boot?
-      const oobeDone = oobeCompleted();
+      const oobeDone = await oobeCompleted();
       if (!oobeDone) {
-        void launchApp("login");
+        void launchApp("oobe");
       } else {
         void launchApp("login");
       }
