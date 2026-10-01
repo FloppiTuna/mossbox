@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@noriginmedia/norigin-spatial-navigation-core": "^4.1.1",
-    "@tauri-apps/api": "^2",
+    "@tauri-apps/api": "~2.12.1",
     "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-process": "~2",
