@@ -16,24 +16,6 @@
     let timesTried = $state<number>(0);
 
     onMount(async () => {
-        const session = getSessionContext();
-        if (session?.name) {
-            showDialog({
-                severity: "MESSAGE",
-                title: "Already Logged In",
-                message:
-                    `A user (${session.name}) is already logged in. Multi-user usage is not implemented. Log out to switch users.`,
-                actions: [
-                    {
-                        label: "OK",
-                        action: () => {},
-                    },
-                ],
-            });
-            goto("/launcher");
-            return;
-        }
-
         users = await getUserList();
     });
 
