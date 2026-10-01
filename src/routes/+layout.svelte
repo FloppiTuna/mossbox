@@ -9,6 +9,8 @@
     import GameControllerY from "virtual:icons/fluent/game-controller-button-y-20-filled";
     import { launchApp, resolveAppScreen } from "$lib/apps/registry";
     import { getBatteryInfo } from "tauri-plugin-device-info-api";
+    import { getSessionContext } from "$lib/session";
+    import { playUISound } from "$lib/sfx";
 
     let appId = $derived(page.params.appName);
     let screenPath = $derived(page.params.screenPath);
@@ -43,11 +45,14 @@
     function onKeyPressed(event: KeyboardEvent) {
         if (event.key === "Escape") {
             event.preventDefault();
+            playUISound("BACK");
             void launchApp("launcher"); // cant wait to add multitasking,,,
         } else {
             console.log(`Key pressed: ${event.key}`);
         }
     }
+    
+    let sessionContext = $derived(getSessionContext());
 </script>
 
 <svelte:window onkeydown={onKeyPressed} />
@@ -60,7 +65,12 @@
             <span class="path-text">{pathname}</span>
         </div>
         <!-- battery + time -->
-        <div class="status">{time.toLocaleString()} {batteryLevel == -1 ? "" : `- ${batteryLevel}%`}</div>
+        <div class="status">
+            <span class="time">{time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            
+            <span class="battery">{batteryLevel}%</span>
+            <span class="user">{sessionContext?.name ?? ""}</span>
+        </div>
     </div>
     <div class="content">
         {#key pathname}
