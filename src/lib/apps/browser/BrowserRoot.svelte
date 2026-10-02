@@ -1,47 +1,22 @@
 <script lang="ts">
+    import { LogicalPosition, LogicalSize } from "@tauri-apps/api/dpi";
     import { getCurrentWindow } from "@tauri-apps/api/window";
     import { Webview } from "@tauri-apps/api/webview";
     import { onMount } from "svelte";
 
+    let browserFrame: HTMLIFrameElement | null = null;
+
     onMount(() => {
-        let disposed = false;
-
-        const setupWebview = async () => {
-            const existingWebview = await Webview.getByLabel("browser");
-            if (disposed) return;
-
-            if (existingWebview) {
-                await existingWebview.show();
-                return;
-            }
-
-            const webview = new Webview(getCurrentWindow(), "browser", {
-                url: "https://homestuck.com/",
-                x: 0,
-                y: 0,
-                width: 800,
-                height: 600,
-            });
-
-            await new Promise<void>((resolve, reject) => {
-                void webview.once("tauri://created", () => resolve());
-                void webview.once("tauri://error", (event) => reject(event.payload));
-            });
-
-            if (!disposed) await webview.show();
-        };
-
-        void setupWebview().catch((error) => {
-            console.error("Failed to create browser webview:", error);
-        });
-
-        return () => {
-            disposed = true;
-        };
+        if (browserFrame) {
+            // set iframe src
+            (browserFrame as HTMLIFrameElement).src = "https://www.example.com"; // Replace with your desired URL
+        }
     });
 </script>
 
-<main class="browser-root"></main>
+<main class="browser-root">
+    <iframe bind:this={browserFrame} title="Browser" class="browser-root" style="width: 100%; height: 100%; border: none;"></iframe>
+</main>
     
 <style>
     .browser-root {
