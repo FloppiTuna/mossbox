@@ -6,16 +6,37 @@ pub struct DnsmasqPxeConfiguration {
     interface: String,
 }
 
+pub fn install_dnsmasq_service() -> Result<(), String> {
+    let systemctl = SystemCtl::default();
+    let service_content = r#"[Unit]
+Description=Mossbox DNSMasq Service
+After=network.target
+[Service]
+ExecStart=/usr/sbin/dnsmasq --conf-file=/tmp/mossbox-dnsmasq.conf
+Restart=always
+[Install]
+WantedBy=multi-user.target"#;
+    std::fs::write(
+        "/etc/systemd/system/mossbox-dnsmasq.service",
+        service_content,
+    )
+    .map_err(|e| format!("Failed to write dnsmasq service file: {}", e))?;
+    systemctl.daemon_reload().map_err(|e| format!("Failed to reload systemd daemon: {}", e))?;
+    // systemctl
+    //     .enable("mossbox-dnsmasq.service")
+    //     .map_err(|e| format!("Failed to enable dnsmasq service: {}", e))?;
+    Ok(())
+}
+
 #[tauri::command]
 pub fn write_dnsmasq_configuration(config: DnsmasqPxeConfiguration) -> Result<(), String> {
     let config_content = format!(
         "interface={}\ndhcp-range={},{},120",
-        config.interface,
-        "192.168.1.100",
-        "192.168.1.200"
+        config.interface, "192.168.1.100", "192.168.1.200"
     );
     // write config to /tmp/mossbox-dnsmasq.conf
-    std::fs::write("/tmp/mossbox-dnsmasq.conf", config_content).map_err(|e| format!("Failed to write dnsmasq configuration: {}", e))?;
+    std::fs::write("/tmp/mossbox-dnsmasq.conf", config_content)
+        .map_err(|e| format!("Failed to write dnsmasq configuration: {}", e))?;
     Ok(())
 }
 
