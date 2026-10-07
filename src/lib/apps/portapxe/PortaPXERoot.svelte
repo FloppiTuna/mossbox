@@ -34,11 +34,6 @@
         padding: 1rem;
     }
 
-    .portapxe h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-
     .portapxe p {
         margin-bottom: 1rem;
         line-height: 1.5;
