@@ -73,3 +73,12 @@ pub fn start_dnsmasq_service() -> Result<(), String> {
         .map_err(|e| format!("Failed to start dnsmasq service: {}", e))?;
     Ok(())
 }
+
+#[tauri::command]
+pub fn stop_dnsmasq_service() -> Result<(), String> {
+    let systemctl = SystemCtl::default();
+    systemctl
+        .stop("mossbox-dnsmasq.service")
+        .map_err(|e| format!("Failed to stop dnsmasq service: {}", e))?;
+    Ok(())
+}
